@@ -126,6 +126,7 @@ elif [ "$OS_KIND" = termux ]; then DISTRO="Termux $(uname -m)"; fi
 ARCH=$(uname -m 2>/dev/null)
 RAMMB=$(awk '/MemAvailable/{printf "%d",$2/1024}' /proc/meminfo 2>/dev/null)
 sudo_cmd(){ if [ "$(id -u)" = 0 ]; then "$@"; elif command -v sudo >/dev/null; then sudo "$@"; else err "Cần quyền root/sudo để: $*"; return 1; fi; }
+export -f sudo_cmd
 
 # ───────────── kiểm tra mạng ─────────────
 net_check(){
