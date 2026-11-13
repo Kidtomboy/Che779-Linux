@@ -39,22 +39,40 @@ RUN_TIMEOUT="${CHE_RUN_TIMEOUT:-1800}"
 case "$RUN_TIMEOUT" in ''|*[!0-9]*|0) RUN_TIMEOUT=1800;; esac
 # run "Tiêu đề" lệnh... : chạy nền, có spinner; timeout tổng thể, lỗi thì in đuôi log
 run(){
-  local title="$1"; shift; : >"$LOG"
+  local title="$1"
+  shift
+  : >"$LOG"
+
   if command -v timeout >/dev/null 2>&1; then
-    timeout "$RUN_TIMEOUT" "$@" >>"$LOG" 2>&1 &
+    timeout "$RUN_TIMEOUT" bash -c '"$@"' _ "$@" >>"$LOG" 2>&1 &
   else
     warn "Thiếu tiện ích timeout; không thể áp giới hạn ${RUN_TIMEOUT}s cho bước này."
-    "$@" >>"$LOG" 2>&1 &
+    bash -c '"$@"' _ "$@" >>"$LOG" 2>&1 &
   fi
+
   local pid=$! i=0 s='⠋⠙⠹⠸⠼⠴⠦⠧⠏' t0=$SECONDS
+
   if [ -t 1 ]; then
     while kill -0 "$pid" 2>/dev/null; do
-      printf '\\r  %s%s%s %s %s(%ds)%s\\033[K' "$CY" "${s:i++%10:1}" "$C0" "$title" "$D" $((SECONDS-t0)) "$C0"; sleep 0.12
-    done; printf '\\r\\033[K'
+      printf '\r  %s%s%s %s %s(%ds)%s\033[K' \
+        "$CY" "${s:i++%10:1}" "$C0" "$title" "$D" \
+        $((SECONDS-t0)) "$C0"
+      sleep 0.12
+    done
+    printf '\r\033[K'
   fi
-  wait "$pid"; local rc=$?
-  if [ $rc -eq 0 ]; then ok "$title ${D}($((SECONDS-t0))s)${C0}"; else err "$title"; tail -n 12 "$LOG" | sed 's/^/      /'; fi
-  return $rc
+
+  wait "$pid"
+  local rc=$?
+
+  if [ "$rc" -eq 0 ]; then
+    ok "$title ${D}($((SECONDS-t0))s)${C0}"
+  else
+    err "$title"
+    tail -n 12 "$LOG" | sed 's/^/      /'
+  fi
+
+  return "$rc"
 }
 
 # ───────────── tham số ─────────────
