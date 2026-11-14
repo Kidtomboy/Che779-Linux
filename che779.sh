@@ -100,8 +100,9 @@ extract_jar(){
   if ! sed '1,/^__JAR__$/d' "$0" | base64 -d > "$tmp"; then
     rm -f "$tmp"; err "Không giải mã được JAR nhúng (base64 lỗi)."; return 1
   fi
-  if ! command -v unzip >/dev/null 2>&1 || ! unzip -tq "$tmp" >/dev/null 2>&1; then
-    rm -f "$tmp"; err "JAR nhúng bị hỏng hoặc thiếu unzip để kiểm tra."; return 1
+  # Kiểm tra bằng đầu tệp ZIP ("PK\003\004") nên không cần cài thêm unzip; có unzip thì kiểm tra sâu hơn.
+  if [ "$(head -c 4 "$tmp" | od -An -tx1 | tr -d ' \n')" != 504b0304 ] || { command -v unzip >/dev/null 2>&1 && ! unzip -tq "$tmp" >/dev/null 2>&1; }; then
+    rm -f "$tmp"; err "JAR nhúng bị hỏng."; return 1
   fi
   mv -f "$tmp" "$dest/Che779_EmulatorV2.jar" || { rm -f "$tmp"; return 1; }
 }
