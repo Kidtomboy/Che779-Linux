@@ -12,3 +12,4 @@
 | [SOURCE_INVENTORY](SOURCE_INVENTORY.md) | Danh mục nguồn |
 | [TESTING](TESTING.md) | Kiểm thử, cái gì đã thử |
 | [VARIANTS_AND_CLONES](VARIANTS_AND_CLONES.md) | 4 repo liên quan |
+| [AI_CHANNEL](AI_CHANNEL.md) | Kênh trao đổi Claude ↔ Darling |
