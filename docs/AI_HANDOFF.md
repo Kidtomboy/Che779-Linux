@@ -12,4 +12,6 @@ Che779 Linux / Termux = **một file `che779.sh`** chạy Che779 EmulatorV2 (gam
 - Termux: chủ dự án đã thử thật, chạy được. Các distro khác: đường cài tự động **chưa thử**.
 
 ## Đọc tiếp
+Trao đổi với AI khác: `docs/AI_CHANNEL.md`.
+
 `PROJECT_STATE.md` → `ARCHITECTURE.md` → `DECISIONS.md` → `TESTING.md`.
