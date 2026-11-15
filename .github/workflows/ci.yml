@@ -1,0 +1,29 @@
+name: Kiểm tra (CI)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  kiem-tra:
+    name: Ghép script và kiểm thử
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lấy mã Che779 EmulatorV2 đúng phiên bản đã ghim
+        run: |
+          REF=$(tr -d '[:space:]' < apps/linux/EMULATOR_V2_REF)
+          git clone --quiet https://github.com/Kidtomboy/Che779-EmulatorV2.git emulator-v2
+          git -C emulator-v2 checkout --quiet "$REF"
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '21' }
+      - name: Build jar V2
+        run: bash ./build.sh
+        working-directory: emulator-v2/apps/emulator-v2/source
+      - name: Kiểm thử script
+        run: bash tests/test-script.sh emulator-v2/apps/emulator-v2/source/Che779_EmulatorV2.jar

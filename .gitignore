@@ -1,0 +1,4 @@
+dist/
+out/
+emulator-v2/
+*.log
