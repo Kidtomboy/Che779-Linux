@@ -1,6 +1,6 @@
 name: Phát hành
 
-# Gắn thẻ dạng v1.2.0 (hoặc bấm chạy tay) để tự ghép che779.sh và đưa vào trang Releases.
+# Gắn thẻ dạng v1.3.0 (hoặc bấm chạy tay) để tự build và đưa file tải về vào trang Releases.
 on:
   push:
     tags: [ 'v*' ]
@@ -14,35 +14,39 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Lấy mã Che779 EmulatorV2 đúng phiên bản đã ghim
-        run: |
-          REF=$(tr -d '[:space:]' < apps/linux/EMULATOR_V2_REF)
-          git clone --quiet https://github.com/Kidtomboy/Che779-EmulatorV2.git emulator-v2
-          git -C emulator-v2 checkout --quiet "$REF"
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: '21' }
-      - name: Build jar V2
-        run: bash ./build.sh
-        working-directory: emulator-v2/apps/emulator-v2/source
-      - name: Kiểm thử script
-        run: bash tests/test-script.sh emulator-v2/apps/emulator-v2/source/Che779_EmulatorV2.jar
-      - name: Ghép che779.sh (điền SHA-256 của jar từ chính file jar)
-        run: bash scripts/build-release.sh emulator-v2/apps/emulator-v2/source/Che779_EmulatorV2.jar out
+      - name: Lấy mã V1 và V2 đúng commit đã ghim
+        run: bash scripts/fetch-sources.sh
+      - name: Build 3 jar (V1, V2, Remoter Linux)
+        run: bash scripts/build-jars.sh
+      - name: Kiểm thử
+        run: |
+          bash tests/test-script.sh build/jars/Che779_EmulatorV2.jar
+          bash tests/test-packages.sh
+      - name: Ghép che779.sh, .tar.gz và .deb
+        run: |
+          bash scripts/build-release.sh build/jars/Che779_EmulatorV2.jar out
+          bash scripts/package-tar.sh build/jars out
+          bash scripts/package-deb.sh build/jars out
       - name: Tạo SHA256SUMS (làm SAU CÙNG, trên đúng file sẽ phát hành)
         run: |
           cd out
-          sha256sum che779.sh > SHA256SUMS.txt
+          sha256sum che779.sh *.tar.gz *.deb > SHA256SUMS.txt
           cat SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
         with:
           name: phat-hanh
           path: out/*
+          if-no-files-found: error
       - name: Đưa lên trang Releases
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           files: out/*
           body: |
-            ## Che779 Linux / Termux ${{ github.ref_name }}
-            Tải `che779.sh` rồi chạy: `bash che779.sh`. Script tự nhận diện Linux hoặc Termux.
-            Kiểm tra file tải về bằng `SHA256SUMS.txt`. Chi tiết: xem `CHANGELOG.md`.
+            ## Che779 Linux ${{ github.ref_name }}
+            - **Ubuntu / Mint / Debian:** tải `che779_*_all.deb`, cài bằng `sudo apt install ./che779_*_all.deb`; chạy `che779` (V2) hoặc `che779-remoter` (V1 + Remoter).
+            - **Mọi distro:** tải `che779-*-linux.tar.gz`, giải nén, chạy `./che779`.
+            - `che779.sh`: một file chạy V2 (giữ tạm).
+            Kiểm tra file tải về bằng `SHA256SUMS.txt` (`sha256sum -c SHA256SUMS.txt`). Chi tiết: `CHANGELOG.md`.

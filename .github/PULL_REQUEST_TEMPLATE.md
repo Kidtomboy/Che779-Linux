@@ -8,4 +8,4 @@
 
 - [ ] `bash tests/test-script.sh <jar>`
 - [ ] Đã cập nhật `docs/` và `CHANGELOG.md` nếu hành vi thay đổi
-- [ ] Nếu đổi phần Termux/Linux: đã nói rõ có thử trên máy thật không
+- [ ] Nếu đổi phần Linux: đã nói rõ có thử trên máy thật không

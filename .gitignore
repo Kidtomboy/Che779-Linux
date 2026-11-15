@@ -1,4 +1,8 @@
 dist/
 out/
+build/
 emulator-v2/
+apps/linux/remoter-linux/out/
+apps/linux/remoter-linux/Che779_Remoter.jar
+apps/linux/remoter-linux/sources.txt
 *.log

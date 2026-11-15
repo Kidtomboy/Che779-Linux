@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # ╔══════════════════════════════════════════════════════════════╗
-# ║  Che779 EmulatorV2 — bản chạy cho Linux và Termux (Android)  ║
+# ║        Che779 EmulatorV2 — bản chạy cho Linux                ║
 # ╚══════════════════════════════════════════════════════════════╝
-# Một tệp duy nhất (jar nhúng ở cuối). Tự nhận diện hệ điều hành.
+# Một tệp duy nhất (jar nhúng ở cuối). Dành cho Linux; Termux (Android) dùng repo Che779-Android.
 #   bash che779.sh [tùy chọn] [đoạn_tên_game]
 #   -r, --ram MB     RAM tối đa cho Java (mặc định 1024)
 #   -g, --game TEXT  tự mở các game trong kho có tên chứa TEXT
 #       --net        kiểm tra kết nối mạng (DNS, HTTP, cổng game) rồi thoát
 #       --doctor     in thông tin môi trường rồi thoát
-#       --reset      cài lại từ đầu (xóa dấu hiệu "đã cài")
+#       --reset      (giữ để tương thích, không còn tác dụng trên Linux)
 #   -V, --version    in phiên bản rồi thoát
 #   -h, --help       trợ giúp
 # Kiểu cũ vẫn chạy: bash che779.sh 1024 build11
@@ -87,7 +87,7 @@ while [ $# -gt 0 ]; do
     -r|--ram) XMX="${2:-1024}"; shift;;
     -g|--game) FILTER="${2:-}"; shift;;
     --net) MODE_NET=1;; --doctor) MODE_DOC=1;; --reset) RESET=1;;
-    -V|--version) echo "Che779 Linux/Termux $CHE_VERSION"; exit 0;;
+    -V|--version) echo "Che779 Linux $CHE_VERSION"; exit 0;;
     -h|--help) sed -n '2,14p' "$0" | sed 's/^# \{0,1\}//'; exit 0;;
     ''|*[!0-9]*) [ -z "$FILTER" ] && FILTER="$1";;
     *) XMX="$1";;
@@ -143,7 +143,7 @@ if [ "$OS_KIND" = linux ] && [ -r /etc/os-release ]; then
     *" arch "*|*" manjaro "*) PM=pacman;; *" alpine "*) PM=apk;; *" suse "*|*" opensuse "*) PM=zypper;;
   esac
   grep -qi microsoft /proc/version 2>/dev/null && DISTRO="$DISTRO (WSL)"
-elif [ "$OS_KIND" = termux ]; then DISTRO="Termux $(uname -m)"; fi
+fi
 ARCH=$(uname -m 2>/dev/null)
 RAMMB=$(awk '/MemAvailable/{printf "%d",$2/1024}' /proc/meminfo 2>/dev/null)
 sudo_cmd(){ if [ "$(id -u)" = 0 ]; then "$@"; elif command -v sudo >/dev/null; then sudo "$@"; else err "Cần quyền root/sudo để: $*"; return 1; fi; }
@@ -182,9 +182,11 @@ doctor(){
   if command -v java >/dev/null; then kv "Java" "$(java -version 2>&1 | grep -v Picked | head -1)"; else kv "Java" "chưa cài"; fi
 }
 
-banner "  C H E 7 7 9   E M U L A T O R   V 2" "  J2ME đa tab · Linux & Termux · bản $CHE_VERSION"
-if [ "$OS_KIND" = macos ] || [ "$OS_KIND" = unknown ]; then
-  err "Hệ điều hành chưa được hỗ trợ ($UN). Dùng Linux hoặc Termux (Android)."; exit 1; fi
+banner "  C H E 7 7 9   E M U L A T O R   V 2" "  J2ME đa tab · Linux · bản $CHE_VERSION"
+if [ "$OS_KIND" = termux ]; then
+  err "Termux (Android) không còn nằm ở repo này. Dùng bản Termux ở Che779-Android (thư mục termux/)."; exit 1; fi
+if [ "$OS_KIND" != linux ]; then
+  err "Hệ điều hành chưa được hỗ trợ ($UN). Script này dành cho Linux."; exit 1; fi
 doctor
 [ "$MODE_DOC" = 1 ] && exit 0
 [ "$MODE_NET" = 1 ] && { net_check; exit 0; }
@@ -229,74 +231,6 @@ run_linux(){
     -jar Che779_EmulatorV2.jar ${OPEN[@]+"${OPEN[@]}"}
 }
 
-# ═════════════ TERMUX ═════════════
-run_termux(){
-  local SHARE="$HOME/che779_share" MARK="$HOME/.che779_setup_done"
-  [ "$RESET" = 1 ] && rm -f "$MARK"
-  if [ ! -f "$MARK" ]; then
-    head1 "Cài đặt lần đầu — cần mạng, ~5–10 phút"
-    termux-setup-storage || true
-    run "Cập nhật gói Termux" bash -c 'yes | pkg update -y' || exit 1
-    run "Thêm kho x11-repo" pkg install -y x11-repo || exit 1
-    run "Cài Termux:X11 + proot-distro" pkg install -y termux-x11-nightly proot-distro || exit 1
-    if ! proot-distro login ubuntu -- true >/dev/null 2>&1; then run "Cài Ubuntu (proot)" proot-distro install ubuntu || exit 1; else ok "Ubuntu đã có sẵn"; fi
-    run "Cài Java + openbox trong Ubuntu" proot-distro login ubuntu -- bash -c '
-      export DEBIAN_FRONTEND=noninteractive
-      apt-get update -y &&
-      (apt-get install -y openjdk-17-jre || apt-get install -y openjdk-21-jre) &&
-      apt-get install -y --no-install-recommends openbox x11-utils fonts-dejavu libxtst6 libxi6 libxrender1 libxrandr2 &&
-      apt-get clean && rm -rf /var/lib/apt/lists/*' || { err "Chạy lại script để thử tiếp."; exit 1; }
-    touch "$MARK"
-  else ok "Đã cài đặt từ trước (dùng --reset để cài lại)"; fi
-
-  head1 "Chuẩn bị file"
-  extract_jar "$SHARE" || exit 1; ok "Đã giải nén và kiểm tra JAR"
-  local GM="$SHARE/games"; rm -rf "$GM"; mkdir -p "$GM"
-  for d in "$HOME/storage/downloads/Che779Games" "$HOME/storage/shared/Download/Che779Games" "$HOME/Che779Games"; do
-    [ -d "$d" ] && cp "$d"/*.jar "$GM"/ 2>/dev/null
-  done
-  kv "Kho game" "Download/Che779Games  ($(ls "$GM"/*.jar 2>/dev/null | wc -l) file .jar)"
-  local DATA="$HOME/storage/downloads/Che779Data"
-  mkdir -p "$DATA/filesystem/c/AngelChip" "$DATA/filesystem/e" 2>/dev/null || { DATA="$SHARE/data"; mkdir -p "$DATA/filesystem/c/AngelChip" "$DATA/filesystem/e"; }
-  kv "Dữ liệu" "$DATA"
-  kv "acc.txt" "…/filesystem/c/AngelChip/acc.txt"
-  local OPEN=()
-  if [ -n "$FILTER" ]; then for j in "$GM"/*"$FILTER"*.jar; do [ -f "$j" ] && OPEN+=("/root/che779/games/$(basename "$j")"); done; info "Mở sẵn ${#OPEN[@]} game khớp '$FILTER'"; fi
-
-  head1 "Bật màn hình ảo & emulator (tối đa ${XMX} MB RAM)"
-  termux-wake-lock 2>/dev/null || true
-  CHE779_X11_PID=""
-  cleanup_termux_runtime(){
-    termux-wake-unlock 2>/dev/null || true
-    if [ -n "${CHE779_X11_PID:-}" ]; then kill "$CHE779_X11_PID" 2>/dev/null || true; CHE779_X11_PID=""; fi
-  }
-  trap cleanup_termux_runtime EXIT
-  trap 'cleanup_termux_runtime; exit 130' INT
-  trap 'cleanup_termux_runtime; exit 143' TERM
-  pkill -f termux.x11 2>/dev/null || true
-  termux-x11 :0 >/dev/null 2>&1 & CHE779_X11_PID=$!; sleep 3
-  am start --user 0 -n com.termux.x11/com.termux.x11.MainActivity >/dev/null 2>&1 \
-    && ok "Đã mở Termux:X11" || warn "Hãy mở app Termux:X11 bằng tay (tải APK ở github.com/termux/termux-x11/releases)"
-  sleep 2
-  proot-distro login ubuntu --shared-tmp --bind "$SHARE:/root/che779" --bind "$DATA:/root/.che779" -- bash -c '
-    export DISPLAY=:0 JAVA_TOOL_OPTIONS= MALLOC_ARENA_MAX=2
-    if ! command -v xdpyinfo >/dev/null 2>&1 || ! xdpyinfo -display "$DISPLAY" >/dev/null 2>&1; then
-      echo "Không kết nối được Termux:X11 trên DISPLAY=$DISPLAY. Hãy mở Termux:X11 rồi chạy lại." >&2
-      exit 70
-    fi
-    (openbox >/dev/null 2>&1 &); sleep 1; cd /root/che779
-    exec java -Xms32m -Xmx"$0"m -XX:+UseSerialGC -XX:TieredStopAtLevel=1 \
-      -XX:MinHeapFreeRatio=10 -XX:MaxHeapFreeRatio=30 -XX:-UsePerfData \
-      -XX:ReservedCodeCacheSize=48m -XX:MaxMetaspaceSize=128m -Xshare:auto \
-      -Dche779.gamesdir=/root/che779/games -Djava.awt.headless=false \
-      -Dsun.java2d.opengl=false -Dsun.java2d.xrender=false -Dsun.java2d.pmoffscreen=false \
-      -Dswing.aatext=false -Dawt.useSystemAAFontSettings=off -Djava.net.preferIPv4Stack=true \
-      -jar Che779_EmulatorV2.jar "${@:1}"' "$XMX" ${OPEN[@]+"${OPEN[@]}"}
-  cleanup_termux_runtime
-  trap - EXIT INT TERM
-  ok "Emulator đã đóng."
-}
-
-case "$OS_KIND" in linux) run_linux;; termux) run_termux;; esac
+run_linux
 exit 0
 __JAR__

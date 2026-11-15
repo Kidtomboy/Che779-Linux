@@ -2,11 +2,10 @@
 
 | Đường dẫn | Vai trò |
 |---|---|
-| `apps/linux/che779.sh` | Bản nguồn script (placeholder) |
-| `apps/linux/EMULATOR_V2_REF` | Commit của Che779-EmulatorV2 được ghim |
-| `scripts/build-release.sh` | Ghép bản phát hành, tính SHA-256 |
-| `tests/test-script.sh` | Kiểm thử script |
-| `.github/workflows/ci.yml` | CI: build jar V2 + kiểm thử |
-| `.github/workflows/release.yml` | Phát hành khi gắn thẻ `v*` |
-| `VERSION` | Số phiên bản |
-| `docs/` | Tài liệu |
+| `apps/linux/che779.sh` | Nguồn script một file |
+| `apps/linux/packaging/` | Lệnh `che779`, `che779-remoter`, `.desktop` |
+| `apps/linux/remoter-linux/` | Mã Remoter Linux (Java/Swing) |
+| `apps/linux/EMULATOR_V1_REF`, `EMULATOR_V2_REF` | Commit ghim của Che779-Emulator, Che779-EmulatorV2 |
+| `scripts/` | fetch-sources, build-jars, package-tar, package-deb, build-release |
+| `tests/` | test-script.sh, test-packages.sh, RemoterCoreTest.java |
+| `.github/workflows/` | CI và Phát hành |

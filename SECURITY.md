@@ -12,14 +12,13 @@ Nếu bạn tìm thấy lỗ hổng, **đừng đăng công khai** trong Issue. 
 | Jar được nhúng sẵn | Kiểm tra đầu tệp ZIP và SHA-256 (điền lúc đóng gói). Mã này bảo vệ khỏi tải hỏng/bị sửa jar **sau khi** đóng gói; nó không thay cho việc kiểm tra `SHA256SUMS.txt` của chính `che779.sh`. |
 | Danh sách máy chủ game tải bằng HTTP thường | Chỉ dùng cho lệnh `--net`; chưa có kiểm tra toàn vẹn. |
 | IPC của emulator chưa xác thực | Xem `SECURITY.md` của [Che779-EmulatorV2](https://github.com/Kidtomboy/Che779-EmulatorV2). |
-| Termux: script đồng bộ game vào thư mục bản sao | Chỉ là bản sao; kho game gốc `Download/Che779Games` không bị đụng. |
+| Gói `.deb`/`.tar.gz` | Chỉ chứa jar và hai lệnh; không có script cài đặt chạy với quyền root ngoài việc `apt` cài gói. Kiểm tra bằng `SHA256SUMS.txt`. |
 
 ## Dữ liệu người dùng
 
-- Linux: dữ liệu ở `~/.che779`, game ở `~/Che779Games`.
-- Termux: dữ liệu ở `Download/Che779Data`, game ở `Download/Che779Games`.
+- Dữ liệu ở `~/.che779`, game ở `~/Che779Games`.
 - Script không gửi dữ liệu của bạn ra ngoài; chỉ lệnh `--net` mới kết nối mạng để kiểm tra.
 
 ## Tải bản chính thức
 
-Chỉ tải `che779.sh` từ mục **Releases** của repo chính thức và kiểm tra bằng `SHA256SUMS.txt`.
+Chỉ tải file từ mục **Releases** của repo chính thức và kiểm tra bằng `SHA256SUMS.txt`.

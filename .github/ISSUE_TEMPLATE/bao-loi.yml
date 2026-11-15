@@ -13,7 +13,7 @@ body:
     id: moi-truong
     attributes:
       label: Hệ điều hành (kết quả `bash che779.sh --doctor`)
-      placeholder: "Ubuntu 24.04 / Linux Mint 22 / Termux trên Android 13"
+      placeholder: "Ubuntu 24.04 / Linux Mint 22"
     validations: { required: true }
   - type: textarea
     id: mo-ta
