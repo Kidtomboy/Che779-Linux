@@ -1,0 +1,29 @@
+name: Báo lỗi
+description: Ứng dụng chạy sai hoặc bị lỗi
+labels: [bug]
+body:
+  - type: input
+    id: phien-ban
+    attributes:
+      label: Phiên bản
+      description: Chạy `bash che779.sh --version`.
+      placeholder: "1.2.0"
+    validations: { required: true }
+  - type: input
+    id: moi-truong
+    attributes:
+      label: Hệ điều hành (kết quả `bash che779.sh --doctor`)
+      placeholder: "Ubuntu 24.04 / Linux Mint 22 / Termux trên Android 13"
+    validations: { required: true }
+  - type: textarea
+    id: mo-ta
+    attributes:
+      label: Chuyện gì xảy ra?
+      description: Các bước để lỗi xuất hiện, kết quả mong muốn và kết quả thực tế.
+    validations: { required: true }
+  - type: textarea
+    id: nhat-ky
+    attributes:
+      label: Nhật ký lỗi (nếu có)
+      description: Xóa mật khẩu proxy và thông tin cá nhân trước khi dán.
+      render: text
