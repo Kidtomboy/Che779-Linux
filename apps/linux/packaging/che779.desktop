@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Che779 EmulatorV2
+Comment=Giả lập game Java J2ME (nhiều tab)
+Exec=che779
+Terminal=false
+Categories=Game;Emulator;

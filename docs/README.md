@@ -10,6 +10,6 @@
 | [PROJECT_STATE](PROJECT_STATE.md) | Trạng thái hiện tại |
 | [ROADMAP](ROADMAP.md) | Lộ trình |
 | [SOURCE_INVENTORY](SOURCE_INVENTORY.md) | Danh mục nguồn |
-| [TESTING](TESTING.md) | Kiểm thử, cái gì đã thử |
+| [TESTING](TESTING.md) | Kiểm thử, cái gì đã/chưa thử |
 | [VARIANTS_AND_CLONES](VARIANTS_AND_CLONES.md) | 4 repo liên quan |
 | [AI_CHANNEL](AI_CHANNEL.md) | Kênh trao đổi Claude ↔ Darling |

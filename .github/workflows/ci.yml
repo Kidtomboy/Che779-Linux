@@ -11,19 +11,17 @@ permissions:
 
 jobs:
   kiem-tra:
-    name: Ghép script và kiểm thử
+    name: Build jar, ghép gói và kiểm thử
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Lấy mã Che779 EmulatorV2 đúng phiên bản đã ghim
-        run: |
-          REF=$(tr -d '[:space:]' < apps/linux/EMULATOR_V2_REF)
-          git clone --quiet https://github.com/Kidtomboy/Che779-EmulatorV2.git emulator-v2
-          git -C emulator-v2 checkout --quiet "$REF"
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: '21' }
-      - name: Build jar V2
-        run: bash ./build.sh
-        working-directory: emulator-v2/apps/emulator-v2/source
-      - name: Kiểm thử script
-        run: bash tests/test-script.sh emulator-v2/apps/emulator-v2/source/Che779_EmulatorV2.jar
+      - name: Lấy mã V1 và V2 đúng commit đã ghim
+        run: bash scripts/fetch-sources.sh
+      - name: Build 3 jar (V1, V2, Remoter Linux)
+        run: bash scripts/build-jars.sh
+      - name: Kiểm thử che779.sh
+        run: bash tests/test-script.sh build/jars/Che779_EmulatorV2.jar
+      - name: Kiểm thử gói .deb và .tar.gz
+        run: bash tests/test-packages.sh

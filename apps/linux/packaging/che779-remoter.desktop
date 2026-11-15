@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Che779 Remoter
+Comment=Điều khiển nhiều Emulator V1
+Exec=che779-remoter
+Terminal=false
+Categories=Game;Emulator;

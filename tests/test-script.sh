@@ -12,7 +12,7 @@ bash -n "$ROOT/apps/linux/che779.sh" || fail "bản nguồn sai cú pháp"
 S="$T/out/che779.sh"
 
 VER="$(tr -d '[:space:]' < "$ROOT/VERSION")"
-[ "$(bash "$S" --version)" = "Che779 Linux/Termux $VER" ] || fail "--version sai"
+[ "$(bash "$S" --version)" = "Che779 Linux $VER" ] || fail "--version sai"
 bash "$S" --help | grep -q -- '--doctor' || fail "--help thiếu nội dung"
 
 # Chạy thử: giải nén jar, kiểm tra ZIP + SHA-256, rồi thoát

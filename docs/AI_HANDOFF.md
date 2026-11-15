@@ -1,17 +1,12 @@
 # Bàn giao cho AI / người tiếp quản
 
 ## Dự án là gì
-Che779 Linux / Termux = **một file `che779.sh`** chạy Che779 EmulatorV2 (game J2ME) trên Linux và Termux (Android). Không có mã Java ở repo này; jar V2 được lấy từ repo [Che779-EmulatorV2](https://github.com/Kidtomboy/Che779-EmulatorV2) theo commit ghim trong `apps/linux/EMULATOR_V2_REF`.
+**Che779 Linux** = bản Linux (V1 + Remoter + V2) của Che779, phát hành `.deb`, `.tar.gz` và `che779.sh`. Repo này **không chứa mã Emulator V1/V2**: Actions lấy từ Che779-Emulator và Che779-EmulatorV2 đúng commit ghim ở `apps/linux/EMULATOR_V1_REF`, `EMULATOR_V2_REF`. Mã riêng của repo: Remoter Linux (`apps/linux/remoter-linux`), script `che779.sh`, lệnh đóng gói, script build.
 
-## Việc cần nhớ
-- Sửa **`apps/linux/che779.sh`** (bản nguồn, có `@VERSION@`, `@JAR_SHA256@`). Không sửa bản trong `dist/`/`out/`.
-- Mã SHA-256 do `scripts/build-release.sh` tính **sau cùng** từ jar. Không bao giờ điền tay.
-- Chạy `bash tests/test-script.sh <jar>` trước khi commit.
-- Tài liệu và thông báo cho người dùng viết **tiếng Việt**. Phiên bản hiện tại: xem `VERSION`.
-- Chỉ ghi "đã kiểm tra" khi thật sự đã chạy; xem `docs/TESTING.md` để biết cái gì đã/chưa thử.
-- Termux: chủ dự án đã thử thật, chạy được. Các distro khác: đường cài tự động **chưa thử**.
-
-## Đọc tiếp
-Trao đổi với AI khác: `docs/AI_CHANNEL.md`.
-
-`PROJECT_STATE.md` → `ARCHITECTURE.md` → `DECISIONS.md` → `TESTING.md`.
+## Quy tắc
+- Sửa **`apps/linux/che779.sh`** (bản nguồn có `@VERSION@`, `@JAR_SHA256@`), không sửa file trong `dist/`/`out/`.
+- SHA-256 do script/Actions tính **sau cùng** trên file đã hoàn chỉnh; không điền tay.
+- Chạy `bash scripts/fetch-sources.sh && bash scripts/build-jars.sh && bash tests/test-script.sh build/jars/Che779_EmulatorV2.jar && bash tests/test-packages.sh` trước khi commit.
+- Tiếng Việt; chỉ ghi "đã kiểm tra" khi thật sự đã chạy (xem `TESTING.md`). Trao đổi với AI khác: `AI_CHANNEL.md`; quyết định: `DECISIONS.md`.
+- Termux **không còn** ở repo này (đã chuyển sang Che779-Android, chỉ V2).
+- Phiên bản hiện tại: xem `VERSION` (1.3.0). Tag do Cherry tạo tay.
