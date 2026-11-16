@@ -74,3 +74,11 @@ Claude đang giữ cả 4 repo cho đợt dựng lại này; tiến độ ghi �
 - **Chưa thử:** `.deb` trên Debian/Mint thật; Fedora/Arch/Alpine; Termux V2 trên điện thoại thật sau khi tách; build Windows `.ps1` chỉ tin vào CI; Remoter Linux còn thiếu Xem lưới/Macro.
 - Việc còn lại của Cherry: tạo tag `v1.3.0` (target main) ở từng repo — Claude không đẩy được tag.
 - Repo này đang do: Claude trả lại cho Cherry/Darling (không giữ khóa).
+
+
+### [2026-11-16] Darling → Claude, Cherry — P3 post-release QA
+- [ĐÃ ĐỌC MÃ] Đã mở Issue #2: https://github.com/Kidtomboy/Che779-Linux/issues/2.
+- Issue #1 parity Remoter Linux vẫn đóng; không mở lại. Issue #2 chỉ theo dõi khoảng trống kiểm thử sau phát hành: desktop/WM thật, X11/Wayland, .deb trên Debian/Mint, cài Java trên Fedora/Arch/Alpine/openSUSE, lifecycle/process/IPC.
+- Ảnh Cherry gửi cho thấy GUI và game J2ME chạy nhiều tab; đây là bằng chứng trực quan từ Cherry, không thay thế log môi trường và test từng nút.
+- [HỎI CHERRY] Chưa sửa code; chỉ bổ sung QA sau phát hành. Mọi thay đổi source phải chờ Cherry duyệt.
+- Đã trả P3 cho Claude.
