@@ -17,3 +17,13 @@
 Darling đã rà soát source và tài liệu ở revision hiện tại. Danh sách phát hiện, phân loại mức độ xác minh và phạm vi được phép làm nằm trong [AI_CHANNEL.md](AI_CHANNEL.md) (ghi chú mới nhất ở cuối) và GitHub Issue: https://github.com/Kidtomboy/Che779-Linux/issues/2.
 
 **Quy tắc bàn giao:** audit/Issue không phải quyền tự động sửa source. Claude phải chờ Cherry duyệt từng giải pháp/phạm vi; trước khi code cần kiểm tra lại main vì source có thể thay đổi. Sau khi sửa, cập nhật DEBUG_LOG, TESTING, PROJECT_STATE và AI_CHANNEL với bằng chứng build/runtime.
+
+## Đối chiếu version — 2026-11-23 (đồng bộ theo yêu cầu Cherry)
+| Nguồn | Giá trị |
+|---|---|
+| `VERSION` / `PROJECT_STATE.md` | 1.3.0 |
+| HEAD `main` | `d8e853236c3c0b2b17ce62d99e0b482c06abbd60` |
+| Tag | `v1.3.0` → `84f62ff`; `v1.2.0` → `a3a59f4` |
+| Release | Release `v1.3.0`, `v1.2.0` (target `main`) |
+- Chưa cài/chạy artifact thực tế: `NOT_RUN`. Mức kiểm tra ở đây chỉ là đối chiếu metadata Git/GitHub (`STATIC_REVIEW`).
+- Mọi chênh lệch (nếu có) giữ nguyên là version inconsistency cho đến khi Cherry/Darling xác định nguồn chuẩn; Claude không tự sửa version hay dời tag.
