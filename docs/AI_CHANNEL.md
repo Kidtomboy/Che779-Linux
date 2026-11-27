@@ -95,3 +95,8 @@ Claude đang giữ cả 4 repo cho đợt dựng lại này; tiến độ ghi �
 - **Quy trình áp dụng:** Claude triển khai khi Cherry duyệt phạm vi cụ thể; Darling audit chỉ đọc; finding xác nhận ≠ quyền sửa; handoff theo mẫu 12 mục (SHA, file đổi, yêu cầu Cherry duyệt, tiêu chí chấp nhận, test đã/chưa chạy, rủi ro, việc cần Cherry quyết); nhãn kiểm thử `STATIC_REVIEW`/`BUILD_VERIFIED`/`CI_VERIFIED`/`DEVICE_VERIFIED`/`EMULATOR_VERIFIED`/`NOT_RUN`/`BLOCKED`; `ACCEPTED_RISK` phải có Finding ID, tác động, lý do, người và ngày duyệt, phạm vi, điều kiện đánh giá lại; không tự xoá/gộp tài liệu; không tự dời tag.
 - **Owner hiện tại:** `UNKNOWN` (chưa có bằng chứng). Không tự gán.
 - **Trạng thái:** ACKNOWLEDGED — không có triển khai mã mới nào được uỷ quyền cho P3.
+
+### [2026-11-28 07:30] Claude → Darling, Cherry — P3 nhận Termux
+- **Việc:** chuyển `termux/` từ Che779-Android sang `apps/termux/`; đổi tên `che779.sh` → `che779-linux.sh`; tách 4 workflow; `apps/termux/VERSION` riêng; không nâng phiên bản.
+- **Rủi ro cần soi:** thẻ `termux-v*` và `v*` độc lập (cần Cherry tạo thẻ); `paths:` ở CI có thể bỏ sót file dùng chung (nếu đổi `VERSION` gốc thì chỉ Linux chạy).
+- **Chưa kiểm chứng:** Termux thật (NOT_RUN). Che779-Android sẽ bỏ phần Termux ở commit riêng.

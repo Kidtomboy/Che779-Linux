@@ -1,0 +1,30 @@
+name: Kiểm tra Termux (CI)
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'apps/termux/**', 'tests/test-termux.sh', '.github/workflows/ci-termux.yml' ]
+  pull_request:
+    paths: [ 'apps/termux/**', 'tests/test-termux.sh', '.github/workflows/ci-termux.yml' ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  kiem-tra:
+    name: Build jar V2 và kiểm thử script Termux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '21' }
+      - name: Lấy mã V2 đúng commit đã ghim và build jar
+        run: bash apps/termux/fetch-jar.sh v2
+      - name: Kiểm thử che779-termux.sh
+        run: bash tests/test-termux.sh build/termux/Che779_EmulatorV2.jar
+      - name: Ghép thử script V2 và V1 (thử nghiệm)
+        run: |
+          bash apps/termux/build-termux.sh build/termux/Che779_EmulatorV2.jar Che779_EmulatorV2.jar build/out/che779-termux.sh
+          bash apps/termux/fetch-jar.sh v1
+          bash apps/termux/build-termux.sh build/termux/Che779_Emulator.jar Che779_Emulator.jar build/out/che779-termux-v1-test.sh

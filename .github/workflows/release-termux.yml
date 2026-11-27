@@ -1,0 +1,60 @@
+name: Phát hành Termux
+
+# Gắn thẻ dạng termux-v1.3.0 (hoặc bấm chạy tay) để build và đưa che779-termux.sh vào trang Releases.
+# Thẻ phải khớp apps/termux/VERSION. Linux có workflow riêng (thẻ v*).
+on:
+  push:
+    tags: [ 'termux-v*' ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  phat-hanh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '21' }
+      - name: Kiểm tra thẻ khớp phiên bản
+        if: startsWith(github.ref, 'refs/tags/termux-v')
+        run: |
+          VER="$(tr -d '[:space:]' < apps/termux/VERSION)"
+          [ "${GITHUB_REF_NAME}" = "termux-v${VER}" ] || { echo "Thẻ ${GITHUB_REF_NAME} không khớp apps/termux/VERSION (${VER})" >&2; exit 1; }
+      - name: Lấy mã V2 đúng commit đã ghim và build jar
+        run: bash apps/termux/fetch-jar.sh v2
+      - name: Kiểm thử
+        run: bash tests/test-termux.sh build/termux/Che779_EmulatorV2.jar
+      - name: Ghép che779-termux.sh và bản V1 thử nghiệm
+        run: |
+          set -euo pipefail
+          bash apps/termux/build-termux.sh build/termux/Che779_EmulatorV2.jar Che779_EmulatorV2.jar out/che779-termux.sh
+          bash apps/termux/fetch-jar.sh v1
+          mkdir -p test-out
+          bash apps/termux/build-termux.sh build/termux/Che779_Emulator.jar Che779_Emulator.jar test-out/che779-termux-v1-test.sh
+      - name: Tạo SHA256SUMS (làm SAU CÙNG, trên đúng file sẽ phát hành)
+        run: |
+          cd out
+          sha256sum che779-termux.sh > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: termux-v1-test
+          path: test-out/*
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phat-hanh-termux
+          path: out/*
+          if-no-files-found: error
+      - name: Đưa lên trang Releases
+        if: startsWith(github.ref, 'refs/tags/termux-v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: out/*
+          body: |
+            ## Che779 Termux ${{ github.ref_name }}
+            - Tải `che779-termux.sh`, chạy trong Termux: `bash che779-termux.sh` (cần Termux:X11). Chạy Emulator V2.
+            - Máy tính Linux dùng bản khác: `che779-linux.sh` / `.deb` / `.tar.gz` ở thẻ `v*`.
+            Kiểm tra file tải về bằng `SHA256SUMS.txt` (`sha256sum -c SHA256SUMS.txt`). Chi tiết: `apps/termux/README.md`.

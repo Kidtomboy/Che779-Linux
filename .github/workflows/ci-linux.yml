@@ -1,9 +1,11 @@
-name: Kiểm tra (CI)
+name: Kiểm tra Linux (CI)
 
 on:
   push:
     branches: [ main ]
+    paths: [ 'apps/linux/**', 'scripts/**', 'tests/test-script.sh', 'tests/test-packages.sh', 'tests/RemoterCoreTest.java', 'VERSION', '.github/workflows/ci-linux.yml' ]
   pull_request:
+    paths: [ 'apps/linux/**', 'scripts/**', 'tests/test-script.sh', 'tests/test-packages.sh', 'tests/RemoterCoreTest.java', 'VERSION', '.github/workflows/ci-linux.yml' ]
   workflow_dispatch:
 
 permissions:
@@ -21,7 +23,7 @@ jobs:
         run: bash scripts/fetch-sources.sh
       - name: Build 3 jar (V1, V2, Remoter Linux)
         run: bash scripts/build-jars.sh
-      - name: Kiểm thử che779.sh
+      - name: Kiểm thử che779-linux.sh
         run: bash tests/test-script.sh build/jars/Che779_EmulatorV2.jar
       - name: Kiểm thử gói .deb và .tar.gz
         run: bash tests/test-packages.sh

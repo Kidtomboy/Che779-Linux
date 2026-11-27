@@ -30,7 +30,9 @@ Vào mục **[Releases](../../releases/latest)** và chọn một trong ba cách
 |---|---|---|
 | `che779_<phiên bản>_all.deb` | Ubuntu, Linux Mint, Debian và bản phái sinh | **Khuyên dùng.** `apt` tự cài Java chính thức nếu thiếu; có V2 + V1 + Remoter |
 | `che779-<phiên bản>-linux.tar.gz` | Mọi distro | Giải nén là chạy; cần tự có Java |
-| `che779.sh` | Mọi distro, chỉ cần V2 | Một file có sẵn V2 bên trong; giữ tạm |
+| `che779-linux.sh` | Mọi distro, chỉ cần V2 | Một file có sẵn V2 bên trong; giữ tạm |
+
+**Termux (Android)** có bản riêng, thẻ riêng `termux-v*`: file `che779-termux.sh` (xem `apps/termux/README.md`). Hai bản tách hẳn: `che779-linux.sh` cho máy tính, `che779-termux.sh` cho điện thoại.
 
 Mỗi bản phát hành có kèm `SHA256SUMS.txt` để kiểm tra file tải về có nguyên vẹn không:
 
@@ -38,7 +40,7 @@ Mỗi bản phát hành có kèm `SHA256SUMS.txt` để kiểm tra file tải v�
 sha256sum -c SHA256SUMS.txt
 ```
 
-Mã SHA-256 được tính **sau cùng** trên đúng các file đăng ở Releases. Riêng `che779.sh` còn tự kiểm tra jar nhúng bên trong và từ chối chạy nếu sai.
+Mã SHA-256 được tính **sau cùng** trên đúng các file đăng ở Releases. Riêng `che779-linux.sh` còn tự kiểm tra jar nhúng bên trong và từ chối chạy nếu sai.
 
 > Chưa thấy file nào ở Releases? Bản phát hành được tạo tự động khi chủ dự án gắn thẻ phiên bản. Trong lúc đó bạn có thể [tự build](#-build-từ-mã-nguồn).
 
@@ -117,7 +119,7 @@ tar xzf che779-1.3.0-linux.tar.gz && cd che779-1.3.0-linux
 ./che779               # hoặc ./che779-remoter
 ```
 
-**Một file `che779.sh`:** `bash che779.sh` (chạy V2; nếu thiếu Java, script cài bằng gói chính thức của distro, cần `sudo`).
+**Một file `che779-linux.sh`:** `bash che779-linux.sh` (chạy V2; nếu thiếu Java, script cài bằng gói chính thức của distro, cần `sudo`).
 
 Chọn RAM: `che779 -r 2048` (MB). Mở sẵn game: `che779 /đường/dẫn/game.jar`. Không truyền game thì V2 mở lại các tab của lần trước.
 
@@ -170,7 +172,7 @@ bash scripts/fetch-sources.sh      # lấy mã V1, V2 đúng commit đã ghim
 bash scripts/build-jars.sh         # build 3 jar vào build/jars
 bash scripts/package-tar.sh        # dist/che779-<ver>-linux.tar.gz
 bash scripts/package-deb.sh        # dist/che779_<ver>_all.deb
-bash scripts/build-release.sh build/jars/Che779_EmulatorV2.jar   # dist/che779.sh
+bash scripts/build-release.sh build/jars/Che779_EmulatorV2.jar   # dist/che779-linux.sh
 ```
 
 Kiểm thử: `bash tests/test-script.sh` và `bash tests/test-packages.sh`.
@@ -188,14 +190,14 @@ Chủ dự án phát hành bằng cách gắn thẻ `vX.Y.Z`: workflow **Phát h
 | Remoter không sắp xếp được cửa sổ | `sudo apt install xdotool`; Wayland thuần chưa hỗ trợ |
 | Game không vào được mạng | Đổi máy chủ ("Thay IP") hoặc đặt proxy cho tab. Lỗi còn có thể do chính máy chủ game |
 | Đồng bộ chuột không trúng vị trí | Đặt các tab cùng một kích thước màn hình |
-| Muốn báo lỗi | Mở [Issue](../../issues/new/choose), ghi `che779 --version`, distro và Java; chạy `bash che779.sh --doctor` nếu dùng file `.sh`. Xóa mật khẩu proxy khỏi log |
+| Muốn báo lỗi | Mở [Issue](../../issues/new/choose), ghi `che779 --version`, distro và Java; chạy `bash che779-linux.sh --doctor` nếu dùng file `.sh`. Xóa mật khẩu proxy khỏi log |
 
 ---
 
 ## ⚠️ Giới hạn và vấn đề đã biết
 
-- **Đã thử** (Claude, Ubuntu 24.04, JDK 21, màn hình ảo Xvfb): build 3 jar; tạo `.deb` + `.tar.gz`; cài `.deb`; `che779` chạy V2 với game thật; ghép và kiểm thử `che779.sh`; Remoter Linux mở 3 tab với V1.
-- **Chưa thử:** máy có màn hình thật và trình quản lý cửa sổ; Wayland; `.deb` trên Debian/Mint thật; Fedora/Arch/Alpine/openSUSE (`che779.sh` tự cài Java); sắp xếp tab bằng `xdotool`.
+- **Đã thử** (Claude, Ubuntu 24.04, JDK 21, màn hình ảo Xvfb): build 3 jar; tạo `.deb` + `.tar.gz`; cài `.deb`; `che779` chạy V2 với game thật; ghép và kiểm thử `che779-linux.sh`; Remoter Linux mở 3 tab với V1.
+- **Chưa thử:** máy có màn hình thật và trình quản lý cửa sổ; Wayland; `.deb` trên Debian/Mint thật; Fedora/Arch/Alpine/openSUSE (`che779-linux.sh` tự cài Java); sắp xếp tab bằng `xdotool`.
 - Remoter Linux chưa có **Xem lưới** và **Macro**.
 - Tất cả tab V2 dùng chung một JVM: lỗi nặng ở tầng Java có thể ảnh hưởng cả cửa sổ.
 - **IPC chưa có xác thực:** tiến trình khác trên cùng máy biết cổng thì gửi được lệnh. Không mở cổng này ra mạng. Xem [`SECURITY.md`](SECURITY.md).
@@ -212,8 +214,9 @@ Che779-Linux/
 ├─ README.md  CONTRIBUTING.md  SECURITY.md  LICENSE  CHANGELOG.md  VERSION
 ├─ THIRD_PARTY_NOTICES.md
 ├─ apps/
+│  ├─ termux/             Script Termux (che779-termux.sh), build-termux.sh, fetch-jar.sh, EMULATOR_V2_REF, VERSION riêng
 │  └─ linux/
-│     ├─ che779.sh          Nguồn script một file
+│     ├─ che779-linux.sh          Nguồn script một file
 │     ├─ packaging/         Lệnh che779, che779-remoter, .desktop
 │     ├─ remoter-linux/     Mã Remoter Linux (Java/Swing)
 │     └─ EMULATOR_V1_REF  EMULATOR_V2_REF   Commit ghim của P1, P2

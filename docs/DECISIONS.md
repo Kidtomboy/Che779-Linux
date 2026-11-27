@@ -5,11 +5,11 @@
 Cả 4 repo lên **v1.3.0 thẳng** (không tạo tag v1.2.0). Phân chia: **P1, P2 = Windows** (chỉ mã nguồn + script build `.bat/.cmd/.ps1`, Actions tự build); **P3 = Linux** (V2 + V1 + Remoter Linux; `.deb` + `.tar.gz`; `.sh` giữ tạm); **P4 = Android** (APK + APK clone; `termux/` chỉ V2, V1 ở `termux/test/`). P3/P4 **không chép mã Emulator**, chỉ ghim commit P1/P2 (`EMULATOR_V1_REF`, `EMULATOR_V2_REF`). Mọi Release có `SHA256SUMS.txt` tính sau cùng. Giữ nguyên tên repo. Các mục "tag v1.2.0 trước" ở dưới là **đã bị thay thế**.
 
 
-1. **Một file duy nhất.** Người dùng chỉ tải `che779.sh`; jar nhúng sẵn bằng base64 sau `__JAR__`.
+1. **Một file duy nhất.** Người dùng chỉ tải `che779-linux.sh`; jar nhúng sẵn bằng base64 sau `__JAR__`.
 2. **Gói chính thức của distro** cho Java/Xvfb, không tải tay, không giải nén tay.
 3. **SHA-256 tính sau cùng** từ jar thật, bằng `build-release.sh`; không điền tay.
 4. **Ghim V2 bằng commit** (`EMULATOR_V2_REF`) để bản phát hành tái lập được.
-5. **Gỡ `che779.sh` 1,2 MB khỏi gốc repo**: bản chạy được chỉ có ở Releases (tránh nhúng file nhị phân vào git).
+5. **Gỡ `che779-linux.sh` 1,2 MB khỏi gốc repo**: bản chạy được chỉ có ở Releases (tránh nhúng file nhị phân vào git).
 6. **Phiên bản 1.2.0**, đồng bộ với 3 repo còn lại; CHANGELOG chỉ ghi bản hiện tại.
 7. **Không bó Remoter Java** vào script ở bản này.
 
@@ -22,7 +22,7 @@ Do Cherry quyết, Claude ghi lại. Áp dụng cho cả 4 repo; Claude và Darl
 |---|---|---|---|
 | P1 Che779-Emulator | Windows | Mã V1 + Remoter Windows (C#), file build `.bat/.cmd/.ps1`, docs, test | zip Windows |
 | P2 Che779-EmulatorV2 | Windows | Mã V2, file build `.bat/.cmd/.ps1`, docs, test | zip Windows |
-| P3 Che779-Linux | Linux (bỏ Termux) | Script/gói Linux, **Remoter Linux** (chuyển từ P1), docs, test; bản Linux của V1 và V2 | `.deb`, `.tar.gz` (giữ `che779.sh` tạm đến khi hai cái này ổn); `.rpm` để sau |
+| P3 Che779-Linux | Linux (bỏ Termux) | Script/gói Linux, **Remoter Linux** (chuyển từ P1), docs, test; bản Linux của V1 và V2 | `.deb`, `.tar.gz` (giữ `che779-linux.sh` tạm đến khi hai cái này ổn); `.rpm` để sau |
 | P4 Che779-Android | Android + Termux | Mã APK (Gradle) + bản clone; thư mục `termux/` (script Termux chuyển từ P3, **chỉ V2**) | APK, APK clone, `che779-termux.sh` |
 
 **Quy tắc kèm theo**
@@ -53,4 +53,8 @@ Do Cherry quyết, Claude ghi lại. Áp dụng cho cả 4 repo; Claude và Darl
 6. **Thứ tự:** (a) ~~tag v1.2.0~~ (bị thay thế: lên thẳng 1.3.0); (b) hoàn thiện Remoter Linux (Xem lưới) và nhờ chạy thử Linux thật; (c) 1.3.0 mới chia lại. Không đổi tên repo.
 7. Mỗi README bắt đầu bằng dòng "Nền tảng: …" và bảng 4 repo giống nhau; mô tả repo trên GitHub ghi dạng "[Windows] …", "[Linux] …", "[Android] …".
 
-- **Việc của repo này ở 1.3.0:** thêm `scripts/build-deb.sh`, `scripts/build-tar.sh`; nhận Remoter Linux từ P1; build V1+V2 từ commit ghim (thêm `apps/linux/EMULATOR_V1_REF`); bỏ nhánh Termux khỏi `che779.sh` (chuyển sang P4); workflow Phát hành tạo `.deb`, `.tar.gz`, `.sh`, `SHA256SUMS.txt`.
+- **Việc của repo này ở 1.3.0:** thêm `scripts/build-deb.sh`, `scripts/build-tar.sh`; nhận Remoter Linux từ P1; build V1+V2 từ commit ghim (thêm `apps/linux/EMULATOR_V1_REF`); bỏ nhánh Termux khỏi `che779-linux.sh` (chuyển sang P4); workflow Phát hành tạo `.deb`, `.tar.gz`, `.sh`, `SHA256SUMS.txt`.
+
+## 2026-11-28 — Termux về lại Che779-Linux
+- **Quyết định (Cherry):** chuyển Termux từ Che779-Android (`termux/`) về Che779-Linux (`apps/termux/`). Lý do: ít người dùng, cập nhật theo nhịp riêng, và để Actions của Che779-Android chỉ còn bản chính, bản clone, bản V2 và file checksum.
+- **Tách phiên bản:** `che779-linux.sh` (máy tính) và `che779-termux.sh` (Android) là hai file; workflow và thẻ riêng (`v*` cho Linux, `termux-v*` cho Termux); `apps/termux/VERSION` riêng. Chưa nâng phiên bản nào.

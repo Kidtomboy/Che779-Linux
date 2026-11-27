@@ -1,6 +1,6 @@
-name: Phát hành
+name: Phát hành Linux
 
-# Gắn thẻ dạng v1.3.0 (hoặc bấm chạy tay) để tự build và đưa file tải về vào trang Releases.
+# Linux: gắn thẻ dạng v1.3.0 (Termux có thẻ riêng termux-v*). Gắn thẻ dạng v1.3.0 (hoặc bấm chạy tay) để tự build và đưa file tải về vào trang Releases.
 on:
   push:
     tags: [ 'v*' ]
@@ -24,7 +24,7 @@ jobs:
         run: |
           bash tests/test-script.sh build/jars/Che779_EmulatorV2.jar
           bash tests/test-packages.sh
-      - name: Ghép che779.sh, .tar.gz và .deb
+      - name: Ghép che779-linux.sh, .tar.gz và .deb
         run: |
           bash scripts/build-release.sh build/jars/Che779_EmulatorV2.jar out
           bash scripts/package-tar.sh build/jars out
@@ -32,7 +32,7 @@ jobs:
       - name: Tạo SHA256SUMS (làm SAU CÙNG, trên đúng file sẽ phát hành)
         run: |
           cd out
-          sha256sum che779.sh *.tar.gz *.deb > SHA256SUMS.txt
+          sha256sum che779-linux.sh *.tar.gz *.deb > SHA256SUMS.txt
           cat SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
         with:
@@ -48,5 +48,5 @@ jobs:
             ## Che779 Linux ${{ github.ref_name }}
             - **Ubuntu / Mint / Debian:** tải `che779_*_all.deb`, cài bằng `sudo apt install ./che779_*_all.deb`; chạy `che779` (V2) hoặc `che779-remoter` (V1 + Remoter).
             - **Mọi distro:** tải `che779-*-linux.tar.gz`, giải nén, chạy `./che779`.
-            - `che779.sh`: một file chạy V2 (giữ tạm).
+            - `che779-linux.sh`: một file chạy V2 (giữ tạm).
             Kiểm tra file tải về bằng `SHA256SUMS.txt` (`sha256sum -c SHA256SUMS.txt`). Chi tiết: `CHANGELOG.md`.

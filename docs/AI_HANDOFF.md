@@ -1,10 +1,10 @@
 # Bàn giao cho AI / người tiếp quản
 
 ## Dự án là gì
-**Che779 Linux** = bản Linux (V1 + Remoter + V2) của Che779, phát hành `.deb`, `.tar.gz` và `che779.sh`. Repo này **không chứa mã Emulator V1/V2**: Actions lấy từ Che779-Emulator và Che779-EmulatorV2 đúng commit ghim ở `apps/linux/EMULATOR_V1_REF`, `EMULATOR_V2_REF`. Mã riêng của repo: Remoter Linux (`apps/linux/remoter-linux`), script `che779.sh`, lệnh đóng gói, script build.
+**Che779 Linux** = bản Linux (V1 + Remoter + V2) của Che779, phát hành `.deb`, `.tar.gz` và `che779-linux.sh`. Repo này **không chứa mã Emulator V1/V2**: Actions lấy từ Che779-Emulator và Che779-EmulatorV2 đúng commit ghim ở `apps/linux/EMULATOR_V1_REF`, `EMULATOR_V2_REF`. Mã riêng của repo: Remoter Linux (`apps/linux/remoter-linux`), script `che779-linux.sh`, lệnh đóng gói, script build.
 
 ## Quy tắc
-- Sửa **`apps/linux/che779.sh`** (bản nguồn có `@VERSION@`, `@JAR_SHA256@`), không sửa file trong `dist/`/`out/`.
+- Sửa **`apps/linux/che779-linux.sh`** (bản nguồn có `@VERSION@`, `@JAR_SHA256@`), không sửa file trong `dist/`/`out/`.
 - SHA-256 do script/Actions tính **sau cùng** trên file đã hoàn chỉnh; không điền tay.
 - Chạy `bash scripts/fetch-sources.sh && bash scripts/build-jars.sh && bash tests/test-script.sh build/jars/Che779_EmulatorV2.jar && bash tests/test-packages.sh` trước khi commit.
 - Tiếng Việt; chỉ ghi "đã kiểm tra" khi thật sự đã chạy (xem `TESTING.md`). Trao đổi với AI khác: `AI_CHANNEL.md`; quyết định: `DECISIONS.md`.
@@ -27,3 +27,8 @@ Darling đã rà soát source và tài liệu ở revision hiện tại. Danh s�
 | Release | Release `v1.3.0`, `v1.2.0` (target `main`) |
 - Chưa cài/chạy artifact thực tế: `NOT_RUN`. Mức kiểm tra ở đây chỉ là đối chiếu metadata Git/GitHub (`STATIC_REVIEW`).
 - Mọi chênh lệch (nếu có) giữ nguyên là version inconsistency cho đến khi Cherry/Darling xác định nguồn chuẩn; Claude không tự sửa version hay dời tag.
+
+## Bàn giao 2026-11-28 (Termux về P3)
+- Termux nằm ở `apps/termux/` (nguồn `che779-termux.sh`, `build-termux.sh`, `fetch-jar.sh`, `EMULATOR_V2_REF`, `test/EMULATOR_V1_REF`, `VERSION`). Test: `tests/test-termux.sh`.
+- Release Termux dùng thẻ `termux-vX.Y.Z` khớp `apps/termux/VERSION` (workflow kiểm tra). Linux dùng thẻ `vX.Y.Z`. Thẻ và nhánh do Cherry tạo/xóa.
+- Cần Cherry: tạo thẻ khi muốn phát hành; Termux chưa thử trên máy thật ở cấu trúc mới.

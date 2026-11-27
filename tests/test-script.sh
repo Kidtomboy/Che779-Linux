@@ -7,9 +7,9 @@ JAR="${1:?Thiếu đường dẫn jar}"
 T="$(mktemp -d)"; trap 'rm -rf "$T"' EXIT
 fail(){ echo "THẤT BẠI: $*" >&2; exit 1; }
 
-bash -n "$ROOT/apps/linux/che779.sh" || fail "bản nguồn sai cú pháp"
+bash -n "$ROOT/apps/linux/che779-linux.sh" || fail "bản nguồn sai cú pháp"
 "$ROOT/scripts/build-release.sh" "$JAR" "$T/out" >/dev/null
-S="$T/out/che779.sh"
+S="$T/out/che779-linux.sh"
 
 VER="$(tr -d '[:space:]' < "$ROOT/VERSION")"
 [ "$(bash "$S" --version)" = "Che779 Linux $VER" ] || fail "--version sai"
@@ -24,7 +24,7 @@ sed 's/^CHE_JAR_SHA256="[0-9a-f]*"/CHE_JAR_SHA256="00000000000000000000000000000
 if CHE_DRY=1 CHE_OUT="$T/y" bash "$T/bad.sh" >/dev/null 2>&1; then fail "script vẫn chạy dù SHA-256 sai"; fi
 
 # Phải TỪ CHỐI bản nguồn (không có jar)
-if CHE_DRY=1 CHE_OUT="$T/z" bash "$ROOT/apps/linux/che779.sh" >/dev/null 2>&1; then fail "bản nguồn không được phép chạy"; fi
+if CHE_DRY=1 CHE_OUT="$T/z" bash "$ROOT/apps/linux/che779-linux.sh" >/dev/null 2>&1; then fail "bản nguồn không được phép chạy"; fi
 
 # Không được cần unzip
 mkdir -p "$T/bin"; for t in bash sed base64 head od tr mkdir mv rm cut sha256sum dirname tput cat date uname id; do p="$(command -v $t || true)"; [ -n "$p" ] && ln -sf "$p" "$T/bin/$t"; done

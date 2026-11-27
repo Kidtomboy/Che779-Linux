@@ -6,13 +6,13 @@ body:
     id: phien-ban
     attributes:
       label: Phiên bản
-      description: Chạy `bash che779.sh --version`.
+      description: Chạy `bash che779-linux.sh --version`.
       placeholder: "1.3.0"
     validations: { required: true }
   - type: input
     id: moi-truong
     attributes:
-      label: Hệ điều hành (kết quả `bash che779.sh --doctor`)
+      label: Hệ điều hành (kết quả `bash che779-linux.sh --doctor`)
       placeholder: "Ubuntu 24.04 / Linux Mint 22"
     validations: { required: true }
   - type: textarea
