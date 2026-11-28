@@ -1,6 +1,6 @@
 name: Phát hành Linux
 
-# Linux: gắn thẻ dạng v1.3.0 (Termux có thẻ riêng termux-v*). Gắn thẻ dạng v1.3.0 (hoặc bấm chạy tay) để tự build và đưa file tải về vào trang Releases.
+# Linux: gắn thẻ dạng v1.3.1 (Termux có thẻ riêng termux-v*). Gắn thẻ dạng v1.3.1 (hoặc bấm chạy tay) để tự build và đưa file tải về vào trang Releases.
 on:
   push:
     tags: [ 'v*' ]
@@ -16,6 +16,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: '21' }
+      - name: Kiểm tra thẻ khớp phiên bản
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          VER="$(tr -d '[:space:]' < VERSION)"
+          [ "${GITHUB_REF_NAME}" = "v${VER}" ] || { echo "Thẻ ${GITHUB_REF_NAME} không khớp VERSION (${VER})" >&2; exit 1; }
       - name: Lấy mã V1 và V2 đúng commit đã ghim
         run: bash scripts/fetch-sources.sh
       - name: Build 3 jar (V1, V2, Remoter Linux)

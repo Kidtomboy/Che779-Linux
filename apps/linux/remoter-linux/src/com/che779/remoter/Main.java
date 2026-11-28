@@ -21,7 +21,7 @@ import javax.swing.table.*;
  * Dieu khien nhieu Emulator V1 (moi game mot tien trinh Java) qua IPC TCP 127.0.0.1.
  */
 public final class Main {
-    static final String VERSION = "1.3.0";
+    static final String VERSION = "1.3.1";
     static final File HOME = new File(System.getProperty("user.home"), ".che779");
     static final File REMOTER_DIR = new File(HOME, "Che779-Remoter");
     static final File CFG = new File(REMOTER_DIR, "che779_remoter.ini");

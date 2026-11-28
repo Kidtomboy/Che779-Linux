@@ -8,8 +8,8 @@
 - SHA-256 do script/Actions tính **sau cùng** trên file đã hoàn chỉnh; không điền tay.
 - Chạy `bash scripts/fetch-sources.sh && bash scripts/build-jars.sh && bash tests/test-script.sh build/jars/Che779_EmulatorV2.jar && bash tests/test-packages.sh` trước khi commit.
 - Tiếng Việt; chỉ ghi "đã kiểm tra" khi thật sự đã chạy (xem `TESTING.md`). Trao đổi với AI khác: `AI_CHANNEL.md`; quyết định: `DECISIONS.md`.
-- Termux **không còn** ở repo này (đã chuyển sang Che779-Android, chỉ V2).
-- Phiên bản hiện tại: xem `VERSION` (1.3.0). Tag do Cherry tạo tay.
+- Termux nằm ở `apps/termux/` (từ 2026-11-28; từng ở Che779-Android), chỉ V2 chính thức.
+- Phiên bản hiện tại: xem `VERSION` (1.3.1). Tag do Cherry tạo tay.
 
 
 ## Audit độc lập 1.3.0 — 2026-11-16

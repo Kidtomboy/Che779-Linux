@@ -1,4 +1,4 @@
-# Trạng thái dự án (1.3.0)
+# Trạng thái dự án (1.3.1)
 
 | Hạng mục | Trạng thái |
 |---|---|
@@ -7,8 +7,8 @@
 | `che779-remoter` (V1 + Remoter) | Đã chạy 3 tab dưới Xvfb |
 | Máy Linux có màn hình + window manager | **Chưa thử** |
 | Fedora/Arch/Alpine/openSUSE, Wayland | **Chưa thử** |
-| Termux | Đã chuyển sang Che779-Android |
-| Đã đăng Release | Khi Cherry gắn thẻ `v1.3.0` |
+| Termux | Nằm ở `apps/termux/` (thẻ `termux-v*`) |
+| Đã đăng Release | Khi Cherry gắn thẻ `v1.3.1` |
 
 Phụ thuộc: ghim ở `apps/linux/EMULATOR_V1_REF`, `EMULATOR_V2_REF`.
 

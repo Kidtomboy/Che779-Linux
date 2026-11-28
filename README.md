@@ -7,7 +7,7 @@
 Cài một gói `.deb` (hoặc giải nén `.tar.gz`), gõ `che779` là chơi.
 Dựa trên MicroEmulator 3.0.0, thêm lớp Che779: tab, lưới, proxy theo tab, đồng bộ thao tác và dọn RAM.
 
-> **Nền tảng: Linux.** Quy ước 4 repo: **P1 và P2 = Windows · P3 = Linux · P4 = Android (kèm Termux)**. Termux (Android) nằm ở [Che779-Android](https://github.com/Kidtomboy/Che779-Android).
+> **Nền tảng: Linux.** Quy ước 4 repo: **P1 và P2 = Windows · P3 = Linux (kèm Termux) · P4 = Android**. Termux (Android) nằm ngay trong repo này, thư mục `apps/termux/`.
 
 [![Phiên bản](https://img.shields.io/github/v/release/Kidtomboy/Che779-Linux?label=phi%C3%AAn%20b%E1%BA%A3n&color=blue)](../../releases/latest)
 [![Lượt tải](https://img.shields.io/github/downloads/Kidtomboy/Che779-Linux/total?label=l%C6%B0%E1%BB%A3t%20t%E1%BA%A3i&color=brightgreen)](../../releases)
@@ -54,8 +54,8 @@ Che779 gồm 4 dự án, mỗi dự án một repo. Bạn đang xem **Project 3*
 |:-:|---|---|---|
 | 1 | [**Che779-Emulator**](https://github.com/Kidtomboy/Che779-Emulator) | Windows | Mỗi tab một cửa sổ, điều khiển bằng Remoter |
 | 2 | [**Che779-EmulatorV2**](https://github.com/Kidtomboy/Che779-EmulatorV2) | Windows | Nhiều tab trong một cửa sổ, một tiến trình |
-| 3 | **Che779-Linux** ← *bạn đang ở đây* | Linux | Gói `.deb` / `.tar.gz`: V2 + V1 + Remoter Linux |
-| 4 | [**Che779-Android**](https://github.com/Kidtomboy/Che779-Android) | Android (kèm Termux) | APK chạy trực tiếp; Termux chạy V2 |
+| 3 | **Che779-Linux** ← *bạn đang ở đây* | Linux + Termux | Gói `.deb` / `.tar.gz`: V2 + V1 + Remoter Linux; script Termux (Android) |
+| 4 | [**Che779-Android**](https://github.com/Kidtomboy/Che779-Android) | Android | APK chạy trực tiếp trên điện thoại |
 
 **V1 hay V2?** V1 (lệnh `che779-remoter`) cho mỗi game một tiến trình riêng nên cách ly tốt nhưng tốn RAM. V2 (lệnh `che779`) gom các tab vào một tiến trình nên nhẹ hơn và mở là dùng; đổi lại một lỗi nặng ở tầng Java có thể ảnh hưởng cả cửa sổ.
 
@@ -107,7 +107,7 @@ Cài Java bằng gói chính thức của distro: `sudo apt install default-jre`
 **Gói `.deb`** (Ubuntu / Mint / Debian):
 
 ```bash
-sudo apt install ./che779_1.3.0_all.deb
+sudo apt install ./che779_1.3.1_all.deb
 che779                 # Emulator V2
 che779-remoter         # Emulator V1 + Remoter
 ```
@@ -115,13 +115,28 @@ che779-remoter         # Emulator V1 + Remoter
 **Gói `.tar.gz`** (mọi distro):
 
 ```bash
-tar xzf che779-1.3.0-linux.tar.gz && cd che779-1.3.0-linux
+tar xzf che779-1.3.1-linux.tar.gz && cd che779-1.3.1-linux
 ./che779               # hoặc ./che779-remoter
 ```
 
 **Một file `che779-linux.sh`:** `bash che779-linux.sh` (chạy V2; nếu thiếu Java, script cài bằng gói chính thức của distro, cần `sudo`).
 
 Chọn RAM: `che779 -r 2048` (MB). Mở sẵn game: `che779 /đường/dẫn/game.jar`. Không truyền game thì V2 mở lại các tab của lần trước.
+
+---
+
+## 📱 Termux (Android)
+
+Dành cho ai muốn chạy **Emulator V2** trên điện thoại qua Termux. Chỉ V2 được hỗ trợ; Termux khó thao tác hơn APK, nên người dùng Android thông thường nên dùng [Che779-Android](https://github.com/Kidtomboy/Che779-Android).
+
+**Phải cài tay trước (script không tự cài được):**
+1. **Termux** (từ F-Droid hoặc GitHub của Termux, *không* dùng bản Google Play đã cũ).
+2. **Termux:X11** (ứng dụng Android, tải APK ở GitHub của Termux:X11). Script chỉ cài phần `termux-x11-nightly` bên trong Termux, còn ứng dụng hiển thị thì bạn tự cài.
+3. Cấp quyền bộ nhớ cho Termux: chạy `termux-setup-storage` rồi bấm Cho phép.
+
+**Chạy:** tải `che779-termux.sh` ở Releases (thẻ `termux-v*`), rồi trong Termux: `bash che779-termux.sh`. Lần đầu script tự cài `x11-repo`, `termux-x11-nightly`, `proot-distro`, Ubuntu (proot), Java 17/21, Openbox và vài thư viện X; **tải vài trăm MB đến hơn 1 GB và mất nhiều phút**, cần mạng ổn định và còn dung lượng. Mở ứng dụng Termux:X11 để thấy cửa sổ.
+
+**Chỗ khó thao tác:** cài hai ứng dụng tay; cấp quyền bộ nhớ; lần cài đầu lâu; thao tác chuột/bàn phím trong X11 trên màn hình cảm ứng khó hơn APK; máy ít RAM dễ bị hệ thống tắt Termux. Chi tiết, tùy chọn (`-r`, `-g`, `--doctor`, `--reset`…) và cách build: `apps/termux/README.md`. Game: `Download/Che779Games`; dữ liệu: `Download/Che779Data`.
 
 ---
 

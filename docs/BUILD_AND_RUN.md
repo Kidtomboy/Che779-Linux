@@ -18,7 +18,7 @@ Dùng mã cục bộ thay vì clone: `SRC_V1=/đường/dẫn SRC_V2=/đường/
 Thử `che779-linux.sh` không cần màn hình: `CHE_DRY=1 CHE_OUT=/tmp/x bash dist/che779-linux.sh`.
 
 ## Phát hành
-`git tag v1.3.0 && git push origin v1.3.0` (hoặc Releases → Draft a new release) → workflow `release.yml` làm đúng các bước trên và đăng file.
+`git tag v1.3.1 && git push origin v1.3.1` (hoặc Releases → Draft a new release) → workflow `release-linux.yml` làm đúng các bước trên và đăng file.
 
 ## Termux (apps/termux)
 ```bash

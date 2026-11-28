@@ -58,3 +58,6 @@ Do Cherry quyết, Claude ghi lại. Áp dụng cho cả 4 repo; Claude và Darl
 ## 2026-11-28 — Termux về lại Che779-Linux
 - **Quyết định (Cherry):** chuyển Termux từ Che779-Android (`termux/`) về Che779-Linux (`apps/termux/`). Lý do: ít người dùng, cập nhật theo nhịp riêng, và để Actions của Che779-Android chỉ còn bản chính, bản clone, bản V2 và file checksum.
 - **Tách phiên bản:** `che779-linux.sh` (máy tính) và `che779-termux.sh` (Android) là hai file; workflow và thẻ riêng (`v*` cho Linux, `termux-v*` cho Termux); `apps/termux/VERSION` riêng. Chưa nâng phiên bản nào.
+
+## 2026-11-28 — Nâng P3 lên 1.3.1
+- **Quyết định (Cherry):** P3 lên 1.3.1 (Linux và Termux cùng số, `VERSION` và `apps/termux/VERSION` riêng). Ghim lại P1 `833ad6e` và P2 `ef98850` (bản 1.3.1). P1 và P2 sẽ có bản nâng cấp riêng sau, P3 theo sau khi đó.

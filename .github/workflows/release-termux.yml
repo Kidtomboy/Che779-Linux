@@ -1,6 +1,6 @@
 name: Phát hành Termux
 
-# Gắn thẻ dạng termux-v1.3.0 (hoặc bấm chạy tay) để build và đưa che779-termux.sh vào trang Releases.
+# Gắn thẻ dạng termux-v1.3.1 (hoặc bấm chạy tay) để build và đưa che779-termux.sh vào trang Releases.
 # Thẻ phải khớp apps/termux/VERSION. Linux có workflow riêng (thẻ v*).
 on:
   push:

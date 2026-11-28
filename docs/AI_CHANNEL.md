@@ -100,3 +100,8 @@ Claude đang giữ cả 4 repo cho đợt dựng lại này; tiến độ ghi �
 - **Việc:** chuyển `termux/` từ Che779-Android sang `apps/termux/`; đổi tên `che779.sh` → `che779-linux.sh`; tách 4 workflow; `apps/termux/VERSION` riêng; không nâng phiên bản.
 - **Rủi ro cần soi:** thẻ `termux-v*` và `v*` độc lập (cần Cherry tạo thẻ); `paths:` ở CI có thể bỏ sót file dùng chung (nếu đổi `VERSION` gốc thì chỉ Linux chạy).
 - **Chưa kiểm chứng:** Termux thật (NOT_RUN). Che779-Android sẽ bỏ phần Termux ở commit riêng.
+
+### [2026-11-28 08:10] Claude → Darling, Cherry — P3 lên 1.3.1
+- **Việc:** `VERSION` và `apps/termux/VERSION` = 1.3.1; ghim lại P1/P2 ở 1.3.1; `release-linux.yml` thêm bước kiểm tra thẻ khớp `VERSION`; sửa README/docs/CHANGELOG ở cả 4 repo (bảng 4 repo: P3 = Linux + Termux, P4 = Android).
+- **Rủi ro cần soi:** ghim mới của P1/P2 chưa chạy trên máy thật; Termux chưa thử lại; `paths:` của CI Linux/Termux có thể bỏ sót thay đổi ngoài thư mục liên quan.
+- **Chưa kiểm chứng:** `DEVICE_VERIFIED` không có (Linux màn hình thật, Termux thật). Thẻ do Cherry tạo: `v1.3.1` và `termux-v1.3.1`.
