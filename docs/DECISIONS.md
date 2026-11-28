@@ -72,3 +72,6 @@ Do Cherry quyết, Claude ghi lại. Áp dụng cho cả 4 repo; Claude và Darl
 - **P4 bản chính có cập nhật → bản clone cũng có** (CI main và Release `v*` build cả hai). **Bản V2 (`dev-*`) chỉ làm khi Cherry yêu cầu.**
 - Termux nằm ở P3 (`apps/termux/`), không còn ở P4.
 - **Nhật ký build:** P1, P2, P3 (Linux và Termux riêng), P4 đều đăng log lên Release tiền-phát-hành tên `buildlog` (P3: `buildlog-linux`, `buildlog-termux`) sau mỗi lần push vào main; xem ở trang Releases.
+
+## 2026-11-28 — Commit ký số (Verified)
+- Cherry cho phép Claude commit bằng tài khoản của Cherry bằng một khóa ký SSH riêng (khóa loại Signing Key, tên "Commit with Cherry" trên GitHub); Cherry xóa khóa đó là Claude hết quyền ký. Nhãn Verified chỉ nghĩa là chữ ký khớp khóa đã đăng ký, không nói ai gõ lệnh; tài liệu bàn giao vẫn ghi rõ Claude và Darling tham gia.
