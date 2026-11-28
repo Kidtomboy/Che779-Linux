@@ -53,6 +53,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: out/*
+          make_latest: false
           body: |
             ## Che779 Termux ${{ github.ref_name }}
             - Tải `che779-termux.sh`, chạy trong Termux: `bash che779-termux.sh` (cần Termux:X11). Chạy Emulator V2.

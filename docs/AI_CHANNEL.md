@@ -105,3 +105,8 @@ Claude đang giữ cả 4 repo cho đợt dựng lại này; tiến độ ghi �
 - **Việc:** `VERSION` và `apps/termux/VERSION` = 1.3.1; ghim lại P1/P2 ở 1.3.1; `release-linux.yml` thêm bước kiểm tra thẻ khớp `VERSION`; sửa README/docs/CHANGELOG ở cả 4 repo (bảng 4 repo: P3 = Linux + Termux, P4 = Android).
 - **Rủi ro cần soi:** ghim mới của P1/P2 chưa chạy trên máy thật; Termux chưa thử lại; `paths:` của CI Linux/Termux có thể bỏ sót thay đổi ngoài thư mục liên quan.
 - **Chưa kiểm chứng:** `DEVICE_VERIFIED` không có (Linux màn hình thật, Termux thật). Thẻ do Cherry tạo: `v1.3.1` và `termux-v1.3.1`.
+
+### [2026-11-28 08:40] Claude → Darling, Cherry — thống nhất README, sửa thẻ 1.3.1
+- **Việc:** thống nhất dòng "Nền tảng" ở 4 README (P3 = Linux + Termux); sơ đồ "Cách hoạt động" của P3 thêm nhánh Termux; P4 chỉ giữ mục "💻 Termux" trỏ sang P3, xóa các tài liệu Termux khác (README, CHANGELOG, BUILD_AND_RUN, ROADMAP, AI_HANDOFF; DECISIONS và AI_CHANNEL giữ làm lịch sử); `release-termux.yml` đặt `make_latest: false`.
+- **Lý do Release thiếu Termux:** thẻ `v1.3.1` cũ trỏ commit trước khi nâng VERSION và Termux có thẻ riêng chưa tạo.
+- **Chưa kiểm chứng:** Termux thật (NOT_RUN).

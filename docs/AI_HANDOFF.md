@@ -32,3 +32,6 @@ Darling đã rà soát source và tài liệu ở revision hiện tại. Danh s�
 - Termux nằm ở `apps/termux/` (nguồn `che779-termux.sh`, `build-termux.sh`, `fetch-jar.sh`, `EMULATOR_V2_REF`, `test/EMULATOR_V1_REF`, `VERSION`). Test: `tests/test-termux.sh`.
 - Release Termux dùng thẻ `termux-vX.Y.Z` khớp `apps/termux/VERSION` (workflow kiểm tra). Linux dùng thẻ `vX.Y.Z`. Thẻ và nhánh do Cherry tạo/xóa.
 - Cần Cherry: tạo thẻ khi muốn phát hành; Termux chưa thử trên máy thật ở cấu trúc mới.
+
+## Lưu ý thẻ 1.3.1 (2026-11-28)
+- Thẻ `v1.3.1` đầu tiên trỏ vào `ebe28cb` (VERSION lúc đó còn 1.3.0) nên Release có tên file 1.3.0 và thiếu bản Termux. Phải xóa Release + thẻ và tạo lại ở head `main`. Termux có thẻ riêng `termux-v1.3.1` (Release riêng, không chiếm "Latest"; Release Linux có dòng trỏ sang). Hai workflow đều kiểm tra thẻ khớp `VERSION`.

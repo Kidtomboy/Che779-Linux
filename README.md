@@ -7,7 +7,7 @@
 Cài một gói `.deb` (hoặc giải nén `.tar.gz`), gõ `che779` là chơi.
 Dựa trên MicroEmulator 3.0.0, thêm lớp Che779: tab, lưới, proxy theo tab, đồng bộ thao tác và dọn RAM.
 
-> **Nền tảng: Linux.** Quy ước 4 repo: **P1 và P2 = Windows · P3 = Linux (kèm Termux) · P4 = Android**. Termux (Android) nằm ngay trong repo này, thư mục `apps/termux/`.
+> **Nền tảng: Linux và Termux (Android).** Quy ước 4 repo: **P1 và P2 = Windows · P3 = Linux + Termux · P4 = Android**. Termux (Android) nằm ngay trong repo này, thư mục `apps/termux/`.
 
 [![Phiên bản](https://img.shields.io/github/v/release/Kidtomboy/Che779-Linux?label=phi%C3%AAn%20b%E1%BA%A3n&color=blue)](../../releases/latest)
 [![Lượt tải](https://img.shields.io/github/downloads/Kidtomboy/Che779-Linux/total?label=l%C6%B0%E1%BB%A3t%20t%E1%BA%A3i&color=brightgreen)](../../releases)
@@ -172,6 +172,7 @@ flowchart TD
     C1 --> V2["☕ Emulator V2<br/>một tiến trình, nhiều tab"]
     C2 --> R["🎛️ Remoter Linux (Java/Swing)"]
     R -- "IPC · 127.0.0.1:7790" --> V1["☕ Emulator V1<br/>mỗi game một tiến trình"]
+    T["📱 che779-termux.sh<br/>Termux + proot Ubuntu"] --> V2T["☕ Emulator V2<br/>nhúng trong script"]
 ```
 
 Mã Emulator **không chép** vào repo này: Actions lấy Che779-Emulator và Che779-EmulatorV2 đúng commit ghim ở `apps/linux/EMULATOR_V1_REF` và `EMULATOR_V2_REF`, build jar rồi đóng gói. Chi tiết: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Giao thức IPC: xem repo Che779-Emulator.

@@ -54,4 +54,5 @@ jobs:
             - **Ubuntu / Mint / Debian:** tải `che779_*_all.deb`, cài bằng `sudo apt install ./che779_*_all.deb`; chạy `che779` (V2) hoặc `che779-remoter` (V1 + Remoter).
             - **Mọi distro:** tải `che779-*-linux.tar.gz`, giải nén, chạy `./che779`.
             - `che779-linux.sh`: một file chạy V2 (giữ tạm).
+            - **Termux (Android):** bản riêng ở thẻ `termux-v*` (file `che779-termux.sh`), xem trang Releases.
             Kiểm tra file tải về bằng `SHA256SUMS.txt` (`sha256sum -c SHA256SUMS.txt`). Chi tiết: `CHANGELOG.md`.
