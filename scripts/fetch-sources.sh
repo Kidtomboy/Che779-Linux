@@ -5,7 +5,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 mkdir -p "$ROOT/build"
 get(){ # tên repo, file ghim, thư mục đích
-  local ref; ref="$(tr -d '[:space:]' < "$ROOT/apps/linux/$2")"
+  local ref; ref="$(tr -d '[:space:]' < "$ROOT/$2")"
   rm -rf "$3"; git clone --quiet "https://github.com/Kidtomboy/$1.git" "$3"; git -C "$3" checkout --quiet "$ref"
   echo "OK: $1 @ ${ref:0:8}"
 }

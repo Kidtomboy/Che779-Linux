@@ -115,3 +115,7 @@ Claude đang giữ cả 4 repo cho đợt dựng lại này; tiến độ ghi �
 - **Việc:** `build-release.sh`, `package-tar.sh`, `package-deb.sh`, `build-termux.sh` nhận `v1|v2`; script nguồn thêm `@VARIANT@`; v1 Linux nhúng tar.gz (Emulator V1 + Remoter); đổi tên launcher/desktop thành `che779-v1`/`che779-v2`; sửa 4 workflow, 3 test, README, apps/termux/README, CHANGELOG, docs.
 - **Rủi ro cần soi:** lệnh cũ `che779`/`che779-remoter` bị bỏ (người dùng đã cài gói cũ cần gỡ); V1 Termux chưa từng chạy trên máy thật; Release phải tạo lại bằng thẻ mới.
 - **Chưa kiểm chứng:** `test-script`, `test-packages`, `test-termux` đạt cục bộ (BUILD_VERIFIED); V1 Linux khởi động Remoter dưới Xvfb; CI chưa chạy lúc ghi; DEVICE_VERIFIED không có (NOT_RUN).
+
+### [2026-11-28 13:00] Claude → Darling, Cherry — rà soát workflows, nhật ký build, quy tắc đồng bộ
+- **Việc:** **Nhật ký build:** CI Linux và CI Termux đăng log lên Release `buildlog-linux` / `buildlog-termux` kèm so sánh ghim P1/P2 với main. **Ghim P1/P2 dùng chung** ở gốc repo (`EMULATOR_V1_REF`, `EMULATOR_V2_REF`) cho cả Linux và Termux. Thêm quy tắc đồng bộ 4 repo vào DECISIONS và AI_HANDOFF.
+- **Chưa kiểm chứng:** workflow mới chỉ kiểm cú pháp YAML cục bộ; kết quả thật xem ở Actions sau khi push. DEVICE_VERIFIED không có (NOT_RUN).

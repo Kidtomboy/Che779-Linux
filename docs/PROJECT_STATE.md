@@ -10,7 +10,7 @@
 | Termux | Nằm ở `apps/termux/` (thẻ `termux-v*`) |
 | Đã đăng Release | Khi Cherry gắn thẻ `v1.3.1` |
 
-Phụ thuộc: ghim ở `apps/linux/EMULATOR_V1_REF`, `EMULATOR_V2_REF`.
+Phụ thuộc: ghim ở `EMULATOR_V1_REF`, `EMULATOR_V2_REF` (ở gốc repo, dùng chung cho Linux và Termux).
 
 ## Cập nhật 2026-11-28
 - Có thêm `apps/termux/` (chuyển từ Che779-Android). File Linux đổi tên `che779-linux.sh`. 4 workflow: `ci-linux`, `release-linux` (thẻ `v*`), `ci-termux`, `release-termux` (thẻ `termux-v*`). Phiên bản vẫn 1.3.0 (Linux) và 1.3.0 (Termux, `apps/termux/VERSION`).

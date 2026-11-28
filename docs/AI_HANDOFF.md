@@ -29,9 +29,15 @@ Darling đã rà soát source và tài liệu ở revision hiện tại. Danh s�
 - Mọi chênh lệch (nếu có) giữ nguyên là version inconsistency cho đến khi Cherry/Darling xác định nguồn chuẩn; Claude không tự sửa version hay dời tag.
 
 ## Bàn giao 2026-11-28 (Termux về P3)
-- Termux nằm ở `apps/termux/` (nguồn `che779-termux.sh`, `build-termux.sh`, `fetch-jar.sh`, `EMULATOR_V2_REF`, `test/EMULATOR_V1_REF`, `VERSION`). Test: `tests/test-termux.sh`.
+- Termux nằm ở `apps/termux/` (nguồn `che779-termux.sh`, `build-termux.sh`, `fetch-jar.sh`, `VERSION`; commit ghim P1/P2 là `EMULATOR_V1_REF`, `EMULATOR_V2_REF` ở gốc repo, dùng chung). Test: `tests/test-termux.sh`.
 - Release Termux dùng thẻ `termux-vX.Y.Z` khớp `apps/termux/VERSION` (workflow kiểm tra). Linux dùng thẻ `vX.Y.Z`. Thẻ và nhánh do Cherry tạo/xóa.
 - Cần Cherry: tạo thẻ khi muốn phát hành; Termux chưa thử trên máy thật ở cấu trúc mới.
 
 ## Lưu ý thẻ 1.3.1 (2026-11-28)
 - Thẻ `v1.3.1` đầu tiên trỏ vào `ebe28cb` (VERSION lúc đó còn 1.3.0) nên Release có tên file 1.3.0 và thiếu bản Termux. Phải xóa Release + thẻ và tạo lại ở head `main`. Termux có thẻ riêng `termux-v1.3.1` (Release riêng, không chiếm "Latest"; Release Linux có dòng trỏ sang). Hai workflow đều kiểm tra thẻ khớp `VERSION`.
+
+## Quy tắc đồng bộ giữa 4 repo (Cherry, 2026-11-28)
+- **P1 hoặc P2 có bản cập nhật → P3 phải theo ngay:** đổi `EMULATOR_V1_REF` / `EMULATOR_V2_REF` ở Che779-Linux sang commit mới, chạy test, cập nhật CHANGELOG/docs của P3. Nhật ký build của P3 có dòng "ghim … CHƯA theo kịp" khi P3 chậm hơn main của P1/P2.
+- **P4 bản chính có cập nhật → bản clone cũng có** (CI main và Release `v*` build cả hai). **Bản V2 (`dev-*`) chỉ làm khi Cherry yêu cầu.**
+- Termux nằm ở P3 (`apps/termux/`), không còn ở P4.
+- **Nhật ký build:** P1, P2, P3 (Linux và Termux riêng), P4 đều đăng log lên Release tiền-phát-hành tên `buildlog` (P3: `buildlog-linux`, `buildlog-termux`) sau mỗi lần push vào main; xem ở trang Releases.

@@ -3,9 +3,9 @@ name: Kiểm tra Termux (CI)
 on:
   push:
     branches: [ main ]
-    paths: [ 'apps/termux/**', 'tests/test-termux.sh', '.github/workflows/ci-termux.yml' ]
+    paths: [ 'apps/termux/**', 'tests/test-termux.sh', 'EMULATOR_V*_REF', '.github/scripts/**', '.github/workflows/ci-termux.yml' ]
   pull_request:
-    paths: [ 'apps/termux/**', 'tests/test-termux.sh', '.github/workflows/ci-termux.yml' ]
+    paths: [ 'apps/termux/**', 'tests/test-termux.sh', 'EMULATOR_V*_REF', '.github/scripts/**', '.github/workflows/ci-termux.yml' ]
   workflow_dispatch:
 
 permissions:
@@ -29,3 +29,37 @@ jobs:
         run: |
           bash apps/termux/build-termux.sh v2 build/termux/Che779_EmulatorV2.jar build/out/che779-termux-v2.sh
           bash apps/termux/build-termux.sh v1 build/termux/Che779_Emulator.jar build/out/che779-termux-v1.sh
+
+  nhat-ky-build:
+    name: Nhật ký build
+    if: always() && github.event_name != 'pull_request'
+    needs: [kiem-tra]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    concurrency:
+      group: buildlog-termux
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - name: So sánh ghim P1/P2 với nhánh main hiện tại
+        run: |
+          {
+            echo "==== GHIM P1/P2"
+            for x in "V1 Che779-Emulator EMULATOR_V1_REF" "V2 Che779-EmulatorV2 EMULATOR_V2_REF"; do
+              set -- $x; pin="$(tr -d '[:space:]' < $3)"; head="$(git ls-remote https://github.com/Kidtomboy/$2.git HEAD | cut -f1)"
+              if [ "$pin" = "$head" ]; then echo "- $1 ($2): ghim ${pin:0:8} = main mới nhất"; else echo "- $1 ($2): ghim ${pin:0:8}, main đang ở ${head:0:8} → P3 CHƯA theo kịp"; fi
+            done
+          } > pins.txt
+      - name: Đăng nhật ký build lên Release "buildlog-termux"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash .github/scripts/publish-buildlog.sh buildlog-termux "Nhật ký build Termux" pins.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: build-log-${{ github.run_id }}
+          path: build-tail.log
+          if-no-files-found: ignore
+          retention-days: 14

@@ -176,7 +176,7 @@ flowchart TD
     T["📱 che779-termux-v1.sh / -v2.sh<br/>Termux + proot Ubuntu"] --> VT["☕ Emulator V1 hoặc V2<br/>nhúng trong script"]
 ```
 
-Mã Emulator **không chép** vào repo này: Actions lấy Che779-Emulator và Che779-EmulatorV2 đúng commit ghim ở `apps/linux/EMULATOR_V1_REF` và `EMULATOR_V2_REF`, build jar rồi đóng gói. Chi tiết: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Giao thức IPC: xem repo Che779-Emulator.
+Mã Emulator **không chép** vào repo này: Actions lấy Che779-Emulator và Che779-EmulatorV2 đúng commit ghim ở `EMULATOR_V1_REF` và `EMULATOR_V2_REF` (gốc repo, dùng chung cho Linux và Termux), build jar rồi đóng gói. Chi tiết: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Giao thức IPC: xem repo Che779-Emulator.
 
 ---
 
@@ -231,12 +231,13 @@ Che779-Linux/
 ├─ README.md  CONTRIBUTING.md  SECURITY.md  LICENSE  CHANGELOG.md  VERSION
 ├─ THIRD_PARTY_NOTICES.md
 ├─ apps/
-│  ├─ termux/             Script Termux (che779-termux.sh là nguồn, ra -v1/-v2), build-termux.sh, fetch-jar.sh, EMULATOR_V2_REF, test/EMULATOR_V1_REF, VERSION riêng
+│  ├─ termux/             Script Termux (che779-termux.sh là nguồn, ra -v1/-v2), build-termux.sh, fetch-jar.sh, VERSION riêng
 │  └─ linux/
 │     ├─ che779-linux.sh          Nguồn script một file (ra -v1/-v2)
 │     ├─ packaging/         Lệnh che779-v1, che779-v2, .desktop
-│     ├─ remoter-linux/     Mã Remoter Linux (Java/Swing)
-│     └─ EMULATOR_V1_REF  EMULATOR_V2_REF   Commit ghim của P1, P2
+│     └─ remoter-linux/     Mã Remoter Linux (Java/Swing)
+├─ EMULATOR_V1_REF  EMULATOR_V2_REF   Commit ghim của P1, P2 (chung Linux và Termux)
+├─ .github/                 workflows (ci-linux, ci-termux, release-linux, release-termux) và scripts/publish-buildlog.sh
 ├─ scripts/               fetch-sources, build-jars, package-tar, package-deb, build-release
 ├─ docs/                  Tài liệu kỹ thuật (có mục lục)
 ├─ tests/                 test-script.sh, test-packages.sh, RemoterCoreTest.java

@@ -66,3 +66,9 @@ Do Cherry quyết, Claude ghi lại. Áp dụng cho cả 4 repo; Claude và Darl
 - **Quyết định (Cherry):** Linux và Termux đều chạy riêng được Che779-Emulator (V1) và Che779-EmulatorV2 (V2). Mọi file `.sh`, `.tar.gz`, `.deb` có `-v1` hoặc `-v2` trong tên "để tránh thiếu sót về sau".
 - **Cách làm:** (1) tên: `che779-linux-v1.sh`/`-v2.sh`, `che779-termux-v1.sh`/`-v2.sh`, `che779-v1-<ver>-linux.tar.gz`/`che779-v2-...`, `che779-v1_<ver>_all.deb`/`che779-v2_...`; (2) hai gói `.deb` độc lập (cài song song được, thư mục `/usr/share/che779-v1`, `-v2`), lệnh `che779-v1` và `che779-v2`; lệnh cũ `che779`/`che779-remoter` bỏ; (3) V1 trên Linux = Emulator V1 + Remoter Linux (script v1 nhúng tar.gz hai jar); (4) V1 trên Termux = chỉ Emulator V1 (mỗi game một tiến trình), không có Remoter; (5) cả hai nằm ở Releases (V1 Termux không còn là artifact thử nghiệm); (6) `VERSION` giữ 1.3.1 (không nâng).
 - **Hệ quả:** tên file ở Release thay đổi, nên Cherry cần tạo lại thẻ `v1.3.1` và `termux-v1.3.1` ở commit mới nhất của main.
+
+## 2026-11-28 — Quy tắc đồng bộ giữa 4 repo (Cherry, 2026-11-28)
+- **P1 hoặc P2 có bản cập nhật → P3 phải theo ngay:** đổi `EMULATOR_V1_REF` / `EMULATOR_V2_REF` ở Che779-Linux sang commit mới, chạy test, cập nhật CHANGELOG/docs của P3. Nhật ký build của P3 có dòng "ghim … CHƯA theo kịp" khi P3 chậm hơn main của P1/P2.
+- **P4 bản chính có cập nhật → bản clone cũng có** (CI main và Release `v*` build cả hai). **Bản V2 (`dev-*`) chỉ làm khi Cherry yêu cầu.**
+- Termux nằm ở P3 (`apps/termux/`), không còn ở P4.
+- **Nhật ký build:** P1, P2, P3 (Linux và Termux riêng), P4 đều đăng log lên Release tiền-phát-hành tên `buildlog` (P3: `buildlog-linux`, `buildlog-termux`) sau mỗi lần push vào main; xem ở trang Releases.

@@ -4,8 +4,8 @@
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"; ROOT="$(cd "$HERE/../.." && pwd)"
 case "${1:?v2|v1}" in
-  v2) REPO=Che779-EmulatorV2; REF="$HERE/EMULATOR_V2_REF"; SCRIPT=.github/scripts/build-emulator-v2.sh; SRC=apps/emulator-v2/source/Che779_EmulatorV2.jar;;
-  v1) REPO=Che779-Emulator;   REF="$HERE/test/EMULATOR_V1_REF"; SCRIPT=.github/scripts/build-emulator.sh; SRC=apps/emulator/source/Che779_Emulator.jar;;
+  v2) REPO=Che779-EmulatorV2; REF="$ROOT/EMULATOR_V2_REF"; SCRIPT=.github/scripts/build-emulator-v2.sh; SRC=apps/emulator-v2/source/Che779_EmulatorV2.jar;;
+  v1) REPO=Che779-Emulator;   REF="$ROOT/EMULATOR_V1_REF"; SCRIPT=.github/scripts/build-emulator.sh; SRC=apps/emulator/source/Che779_Emulator.jar;;
   *) echo "v2|v1" >&2; exit 2;;
 esac
 D="$ROOT/build/termux-src-$1"; rm -rf "$D"; mkdir -p "$ROOT/build/termux"

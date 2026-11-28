@@ -5,7 +5,7 @@ apps/linux/
 ├── che779-linux.sh            bản nguồn script một file (@VERSION@, @JAR_SHA256@, @VARIANT@) → ra -v1 và -v2
 ├── packaging/           lệnh che779-v1, che779-v2 và 2 tệp .desktop
 ├── remoter-linux/       mã Remoter Linux (Java/Swing): Main, Core, Ipc
-└── EMULATOR_V1_REF / EMULATOR_V2_REF   commit ghim của Che779-Emulator / Che779-EmulatorV2
+(gốc repo) EMULATOR_V1_REF / EMULATOR_V2_REF   commit ghim của Che779-Emulator / Che779-EmulatorV2, dùng chung Linux và Termux
 scripts/                 fetch-sources → build-jars → package-tar / package-deb / build-release
 ```
 

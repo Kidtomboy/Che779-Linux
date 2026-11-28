@@ -4,6 +4,7 @@ Chỉ ghi những gì **phiên bản hiện tại** có. Lịch sử các bản 
 
 ## [1.3.1] — Bản phát hành
 
+- **Nhật ký build:** CI Linux và CI Termux đăng log lên Release `buildlog-linux` / `buildlog-termux` kèm so sánh ghim P1/P2 với main. **Ghim P1/P2 dùng chung** ở gốc repo (`EMULATOR_V1_REF`, `EMULATOR_V2_REF`) cho cả Linux và Termux.
 - **Termux về repo này** (`apps/termux/`, từ Che779-Android): hai script `che779-termux-v1.sh` (V1) và `che779-termux-v2.sh` (V2), `VERSION` riêng (cùng số 1.3.1), thẻ phát hành `termux-v1.3.1`.
 - **Tách V1 / V2:** mọi file phát hành có `-v1` hoặc `-v2` trong tên: `che779-linux-v1.sh` / `-v2.sh`, `che779-v1-<ver>-linux.tar.gz` / `che779-v2-...`, `che779-v1_<ver>_all.deb` / `che779-v2_...` (lệnh `che779-v1`, `che779-v2`; hai gói cài song song được), `che779-termux-v1.sh` / `-v2.sh`. V1 = Emulator V1 + Remoter Linux, V2 = Emulator V2. Lệnh cũ `che779` và `che779-remoter` không còn.
 - **Workflow tách riêng:** `ci-linux.yml` và `release-linux.yml` (thẻ `v*`); `ci-termux.yml` và `release-termux.yml` (thẻ `termux-v*`). CI chỉ chạy khi file liên quan đổi; Phát hành kiểm tra thẻ khớp `VERSION`.

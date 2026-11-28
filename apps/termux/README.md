@@ -12,7 +12,7 @@ Bản Linux máy tính là file khác: `che779-linux-v1.sh` / `-v2.sh` (thẻ `v
 ## Cách làm ra file
 - `apps/termux/che779-termux.sh`: **bản nguồn** (có `@VERSION@`, `@JAR_SHA256@`, `@JAR_NAME@`, `@VARIANT@`, chưa có jar).
 - `apps/termux/build-termux.sh <v1|v2> <jar> <file-ra>`: tính SHA-256 từ chính jar, điền vào script, nối jar base64.
-- `apps/termux/fetch-jar.sh v2|v1`: lấy Che779-EmulatorV2 (hoặc Che779-Emulator) đúng commit trong `EMULATOR_V2_REF` (hoặc `test/EMULATOR_V1_REF`) và build jar vào `build/termux/`.
+- `apps/termux/fetch-jar.sh v2|v1`: lấy Che779-EmulatorV2 (hoặc Che779-Emulator) đúng commit trong `EMULATOR_V2_REF` (hoặc `EMULATOR_V1_REF`) ở gốc repo (dùng chung với Linux) và build jar vào `build/termux/`.
 - `bash tests/test-termux.sh [thư-mục-jar]` (cần cả hai jar; chạy fetch-jar.sh v1 và v2 trước): kiểm thử v1 và v2 (SHA-256, từ chối jar sai, không cần `unzip`; giả lập Termux bằng `CHE_FORCE_OS=termux`).
 - Phiên bản riêng: `apps/termux/VERSION` (giữ nguyên cho tới khi Cherry yêu cầu nâng).
 - Workflow riêng: `.github/workflows/ci-termux.yml`, `release-termux.yml`.
