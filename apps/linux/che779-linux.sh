@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # ╔══════════════════════════════════════════════════════════════╗
-# ║        Che779 EmulatorV2 — bản chạy cho Linux                ║
+# ║     Che779 Emulator (V1/V2) — bản chạy cho Linux              ║
 # ╚══════════════════════════════════════════════════════════════╝
-# Một tệp duy nhất (jar nhúng ở cuối). Dành cho Linux; Termux (Android) dùng repo Che779-Android.
-#   bash che779-linux.sh [tùy chọn] [đoạn_tên_game]
+# Một tệp (nhúng ở cuối), tên che779-linux-v1.sh hoặc -v2.sh. Linux; Termux dùng apps/termux/.
+#   bash che779-linux-v2.sh [tùy chọn] [đoạn_tên_game]   (V1 chạy Remoter, bỏ qua -r/-g)
 #   -r, --ram MB     RAM tối đa cho Java (mặc định 1024)
 #   -g, --game TEXT  tự mở các game trong kho có tên chứa TEXT
 #       --net        kiểm tra kết nối mạng (DNS, HTTP, cổng game) rồi thoát
@@ -11,12 +11,14 @@
 #       --reset      (giữ để tương thích, không còn tác dụng trên Linux)
 #   -V, --version    in phiên bản rồi thoát
 #   -h, --help       trợ giúp
-# Kiểu cũ vẫn chạy: bash che779-linux.sh 1024 build11
+# Kiểu cũ vẫn chạy: bash che779-linux-v2.sh 1024 build11
 set -u
 set -o pipefail
 # Hai giá trị này do scripts/build-release.sh điền khi đóng gói (mã băm tính từ đúng jar được nhúng).
 CHE_VERSION="@VERSION@"
 CHE_JAR_SHA256="@JAR_SHA256@"
+# V1 = Emulator V1 + Remoter (gói tar.gz hai jar) · V2 = Emulator V2 (một jar). Điền khi đóng gói.
+CHE_VARIANT="@VARIANT@"
 export LC_ALL=C.UTF-8 2>/dev/null || true
 
 # ───────────── giao diện ─────────────
@@ -87,7 +89,7 @@ while [ $# -gt 0 ]; do
     -r|--ram) XMX="${2:-1024}"; shift;;
     -g|--game) FILTER="${2:-}"; shift;;
     --net) MODE_NET=1;; --doctor) MODE_DOC=1;; --reset) RESET=1;;
-    -V|--version) echo "Che779 Linux $CHE_VERSION"; exit 0;;
+    -V|--version) echo "Che779 Linux ${CHE_VARIANT^^} $CHE_VERSION"; exit 0;;
     -h|--help) sed -n '2,14p' "$0" | sed 's/^# \{0,1\}//'; exit 0;;
     ''|*[!0-9]*) [ -z "$FILTER" ] && FILTER="$1";;
     *) XMX="$1";;
@@ -107,24 +109,34 @@ sha256_of(){
 }
 
 extract_jar(){
-  local dest="$1" tmp="$1/.Che779_EmulatorV2.jar.tmp"
+  local dest="$1" tmp="$1/.payload.tmp"
   mkdir -p "$dest" || return 1
   if [ -z "$(sed '1,/^__JAR__$/d' "$0" | head -c 16)" ]; then
-    err "Tệp này là bản nguồn, không chứa jar. Hãy tải che779-linux.sh ở mục Releases."; return 1
+    err "Tệp này là bản nguồn, không chứa dữ liệu. Hãy tải che779-linux-${CHE_VARIANT}.sh ở mục Releases."; return 1
   fi
   if ! sed '1,/^__JAR__$/d' "$0" | base64 -d > "$tmp"; then
-    rm -f "$tmp"; err "Không giải mã được JAR nhúng (base64 lỗi)."; return 1
+    rm -f "$tmp"; err "Không giải mã được dữ liệu nhúng (base64 lỗi)."; return 1
   fi
-  # 1) đầu tệp ZIP ("PK\003\004") — không cần cài thêm unzip; có unzip thì kiểm tra sâu hơn.
-  if [ "$(head -c 4 "$tmp" | od -An -tx1 | tr -d ' \n')" != 504b0304 ] || { command -v unzip >/dev/null 2>&1 && ! unzip -tq "$tmp" >/dev/null 2>&1; }; then
-    rm -f "$tmp"; err "JAR nhúng bị hỏng."; return 1
+  # 1) kiểm tra đầu tệp: V2 là ZIP ("PK\003\004"), V1 là gzip (1f8b)
+  local magic want=504b0304 nb=4
+  [ "$CHE_VARIANT" = v1 ] && { want=1f8b; nb=2; }
+  magic="$(head -c $nb "$tmp" | od -An -tx1 | tr -d ' \n')"
+  if [ "$magic" != "$want" ] || { [ "$CHE_VARIANT" = v2 ] && command -v unzip >/dev/null 2>&1 && ! unzip -tq "$tmp" >/dev/null 2>&1; }; then
+    rm -f "$tmp"; err "Dữ liệu nhúng bị hỏng."; return 1
   fi
   # 2) mã SHA-256 phải khớp giá trị đã ghi lúc đóng gói
   local got; got="$(sha256_of "$tmp")"
   if [ -n "$got" ] && [ "$got" != "$CHE_JAR_SHA256" ]; then
-    rm -f "$tmp"; err "Mã SHA-256 của JAR không khớp (mong đợi ${CHE_JAR_SHA256:0:12}…, thực tế ${got:0:12}…). Hãy tải lại che779-linux.sh."; return 1
+    rm -f "$tmp"; err "Mã SHA-256 không khớp (mong đợi ${CHE_JAR_SHA256:0:12}…, thực tế ${got:0:12}…). Hãy tải lại che779-linux-${CHE_VARIANT}.sh."; return 1
   fi
-  mv -f "$tmp" "$dest/Che779_EmulatorV2.jar" || { rm -f "$tmp"; return 1; }
+  if [ "$CHE_VARIANT" = v1 ]; then
+    command -v tar >/dev/null 2>&1 || { rm -f "$tmp"; err "Thiếu tiện ích tar."; return 1; }
+    tar -xzf "$tmp" -C "$dest" || { rm -f "$tmp"; err "Giải nén gói V1 lỗi."; return 1; }
+    rm -f "$tmp"
+    [ -f "$dest/Che779_Emulator.jar" ] && [ -f "$dest/Che779_Remoter.jar" ] || { err "Gói V1 thiếu jar."; return 1; }
+  else
+    mv -f "$tmp" "$dest/Che779_EmulatorV2.jar" || { rm -f "$tmp"; return 1; }
+  fi
 }
 if [ "${CHE_DRY:-0}" = "1" ]; then extract_jar "${CHE_OUT:-/tmp/che_dry}" || exit 1; echo "dry-run: jar extracted and ZIP structure checked"; fi
 
@@ -182,9 +194,12 @@ doctor(){
   if command -v java >/dev/null; then kv "Java" "$(java -version 2>&1 | grep -v Picked | head -1)"; else kv "Java" "chưa cài"; fi
 }
 
-banner "  C H E 7 7 9   E M U L A T O R   V 2" "  J2ME đa tab · Linux · bản $CHE_VERSION"
+case "$CHE_VARIANT" in
+  v1) banner "  C H E 7 7 9   E M U L A T O R   V 1" "  J2ME + Remoter (mỗi tab một cửa sổ) · Linux · bản $CHE_VERSION";;
+  *)  banner "  C H E 7 7 9   E M U L A T O R   V 2" "  J2ME đa tab · Linux · bản $CHE_VERSION";;
+esac
 if [ "$OS_KIND" = termux ]; then
-  err "Termux (Android) không còn nằm ở repo này. Dùng bản Termux ở Che779-Android (thư mục termux/)."; exit 1; fi
+  err "Đây là bản Linux. Trên Termux dùng che779-termux-${CHE_VARIANT}.sh (apps/termux/)."; exit 1; fi
 if [ "$OS_KIND" != linux ]; then
   err "Hệ điều hành chưa được hỗ trợ ($UN). Script này dành cho Linux."; exit 1; fi
 doctor
@@ -194,7 +209,7 @@ doctor
 
 # ═════════════ LINUX ═════════════
 run_linux(){
-  local HOME_DIR="$HOME/.che779" SHARE="$HOME/che779_share" GAMES="$HOME/Che779Games"
+  local HOME_DIR="$HOME/.che779" SHARE="$HOME/che779_share_${CHE_VARIANT}" GAMES="$HOME/Che779Games"
   head1 "Chuẩn bị (Linux)"
   # Java
   if ! command -v java >/dev/null; then
@@ -226,6 +241,10 @@ run_linux(){
   local OPEN=()
   if [ -n "$FILTER" ]; then for j in "$GAMES"/*"$FILTER"*.jar; do [ -f "$j" ] && OPEN+=("$j"); done; info "Mở sẵn ${#OPEN[@]} game khớp '$FILTER'"; fi
   head1 "Khởi động (tối đa ${XMX} MB RAM)"
+  if [ "$CHE_VARIANT" = v1 ]; then
+    [ "$XMX" != 1024 ] && warn "V1 chạy qua Remoter: bỏ qua -r (đặt RAM trong cửa sổ Remoter)."
+    cd "$SHARE" && exec ${PRE[@]+"${PRE[@]}"} java -jar Che779_Remoter.jar ${OPEN[@]+"${OPEN[@]}"}
+  fi
   cd "$SHARE" && exec ${PRE[@]+"${PRE[@]}"} java -Xms32m -Xmx"${XMX}"m -XX:+UseSerialGC \
     -Dche779.gamesdir="$GAMES" -Djava.awt.headless=false -Djava.net.preferIPv4Stack=true \
     -jar Che779_EmulatorV2.jar ${OPEN[@]+"${OPEN[@]}"}

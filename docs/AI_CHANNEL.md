@@ -110,3 +110,8 @@ Claude đang giữ cả 4 repo cho đợt dựng lại này; tiến độ ghi �
 - **Việc:** thống nhất dòng "Nền tảng" ở 4 README (P3 = Linux + Termux); sơ đồ "Cách hoạt động" của P3 thêm nhánh Termux; P4 chỉ giữ mục "💻 Termux" trỏ sang P3, xóa các tài liệu Termux khác (README, CHANGELOG, BUILD_AND_RUN, ROADMAP, AI_HANDOFF; DECISIONS và AI_CHANNEL giữ làm lịch sử); `release-termux.yml` đặt `make_latest: false`.
 - **Lý do Release thiếu Termux:** thẻ `v1.3.1` cũ trỏ commit trước khi nâng VERSION và Termux có thẻ riêng chưa tạo.
 - **Chưa kiểm chứng:** Termux thật (NOT_RUN).
+
+### [2026-11-28 12:30] Claude → Darling, Cherry — tách V1/V2 cho Linux và Termux
+- **Việc:** `build-release.sh`, `package-tar.sh`, `package-deb.sh`, `build-termux.sh` nhận `v1|v2`; script nguồn thêm `@VARIANT@`; v1 Linux nhúng tar.gz (Emulator V1 + Remoter); đổi tên launcher/desktop thành `che779-v1`/`che779-v2`; sửa 4 workflow, 3 test, README, apps/termux/README, CHANGELOG, docs.
+- **Rủi ro cần soi:** lệnh cũ `che779`/`che779-remoter` bị bỏ (người dùng đã cài gói cũ cần gỡ); V1 Termux chưa từng chạy trên máy thật; Release phải tạo lại bằng thẻ mới.
+- **Chưa kiểm chứng:** `test-script`, `test-packages`, `test-termux` đạt cục bộ (BUILD_VERIFIED); V1 Linux khởi động Remoter dưới Xvfb; CI chưa chạy lúc ghi; DEVICE_VERIFIED không có (NOT_RUN).

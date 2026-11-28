@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 # Che779 EmulatorV2 (nhiều tab, một cửa sổ) — chạy từ gói .deb hoặc .tar.gz.
-#   che779 [-r MB] [game.jar ...]
+#   che779-v2 [-r MB] [game.jar ...]
 set -u
 HERE="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
 LIB=""
-for d in "$HERE/lib" "$HERE/../share/che779" /usr/share/che779; do [ -f "$d/Che779_EmulatorV2.jar" ] && { LIB="$d"; break; }; done
+for d in "$HERE/lib" "$HERE/../share/che779-v2" /usr/share/che779-v2; do [ -f "$d/Che779_EmulatorV2.jar" ] && { LIB="$d"; break; }; done
 [ -n "$LIB" ] || { echo "Không tìm thấy Che779_EmulatorV2.jar (đã cài đủ gói chưa?)" >&2; exit 1; }
 XMX=1024
 if [ "${1:-}" = "-r" ] || [ "${1:-}" = "--ram" ]; then XMX="${2:-1024}"; shift 2 || true; fi
 case "$XMX" in ''|*[!0-9]*) echo "RAM không hợp lệ" >&2; exit 2;; esac
 if [ "${1:-}" = "-V" ] || [ "${1:-}" = "--version" ]; then echo "Che779 EmulatorV2 @VERSION@ (Linux)"; exit 0; fi
-if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then echo "Dùng: che779 [-r MB] [game.jar ...]   (RAM mặc định 1024 MB)"; exit 0; fi
+if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then echo "Dùng: che779-v2 [-r MB] [game.jar ...]   (RAM mặc định 1024 MB)"; exit 0; fi
 command -v java >/dev/null 2>&1 || { echo "Chưa có Java. Debian/Ubuntu/Mint: sudo apt install default-jre" >&2; exit 1; }
 if [ -z "${DISPLAY:-}" ] && [ -z "${WAYLAND_DISPLAY:-}" ]; then
   command -v xvfb-run >/dev/null 2>&1 && PRE=(xvfb-run -a -s "-screen 0 1280x800x24") || { echo "Không có màn hình (DISPLAY). Chạy trong desktop hoặc cài xvfb." >&2; exit 1; }

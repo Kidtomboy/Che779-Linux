@@ -2,9 +2,9 @@
 
 | Hạng mục | Trạng thái |
 |---|---|
-| `.deb`, `.tar.gz`, `che779-linux.sh` | Build và kiểm thử được cục bộ + CI |
+| `.deb`, `.tar.gz`, `che779-linux-v1.sh`, `-v2.sh` | Build và kiểm thử được cục bộ + CI |
 | `che779` (V2) từ `.deb`, Xvfb, game thật | Đã chạy |
-| `che779-remoter` (V1 + Remoter) | Đã chạy 3 tab dưới Xvfb |
+| `che779-v1` (trước là `che779-remoter`; V1 + Remoter) | Đã chạy 3 tab dưới Xvfb |
 | Máy Linux có màn hình + window manager | **Chưa thử** |
 | Fedora/Arch/Alpine/openSUSE, Wayland | **Chưa thử** |
 | Termux | Nằm ở `apps/termux/` (thẻ `termux-v*`) |

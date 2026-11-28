@@ -6,7 +6,7 @@ Remoter viết bằng **Java/Swing** để điều khiển nhiều **Emulator V1
 
 ```bash
 sudo apt install default-jdk      # Debian/Ubuntu/Mint (gói chính thức); distro khác: gói JDK tương ứng
-# Cách thường dùng là cài gói .deb/.tar.gz rồi chạy `che779-remoter`; dưới đây là chạy từ mã nguồn:
+# Cách thường dùng là cài gói .deb/.tar.gz rồi chạy `che779-v1`; dưới đây là chạy từ mã nguồn:
 cd apps/linux/remoter-linux
 ./run.sh                          # tự build nếu chưa có Che779_Remoter.jar
 ./run.sh /duong/dan/game.jar      # mở sẵn game

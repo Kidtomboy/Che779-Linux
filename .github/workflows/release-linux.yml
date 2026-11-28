@@ -27,17 +27,19 @@ jobs:
         run: bash scripts/build-jars.sh
       - name: Kiểm thử
         run: |
-          bash tests/test-script.sh build/jars/Che779_EmulatorV2.jar
+          bash tests/test-script.sh
           bash tests/test-packages.sh
-      - name: Ghép che779-linux.sh, .tar.gz và .deb
+      - name: Ghép che779-linux-v1.sh / -v2.sh, .tar.gz và .deb (v1 và v2)
         run: |
-          bash scripts/build-release.sh build/jars/Che779_EmulatorV2.jar out
-          bash scripts/package-tar.sh build/jars out
-          bash scripts/package-deb.sh build/jars out
+          for v in v1 v2; do
+            bash scripts/build-release.sh $v build/jars out
+            bash scripts/package-tar.sh $v build/jars out
+            bash scripts/package-deb.sh $v build/jars out
+          done
       - name: Tạo SHA256SUMS (làm SAU CÙNG, trên đúng file sẽ phát hành)
         run: |
           cd out
-          sha256sum che779-linux.sh *.tar.gz *.deb > SHA256SUMS.txt
+          sha256sum che779-linux-v1.sh che779-linux-v2.sh *.tar.gz *.deb > SHA256SUMS.txt
           cat SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
         with:
@@ -51,8 +53,10 @@ jobs:
           files: out/*
           body: |
             ## Che779 Linux ${{ github.ref_name }}
-            - **Ubuntu / Mint / Debian:** tải `che779_*_all.deb`, cài bằng `sudo apt install ./che779_*_all.deb`; chạy `che779` (V2) hoặc `che779-remoter` (V1 + Remoter).
-            - **Mọi distro:** tải `che779-*-linux.tar.gz`, giải nén, chạy `./che779`.
-            - `che779-linux.sh`: một file chạy V2 (giữ tạm).
-            - **Termux (Android):** bản riêng ở thẻ `termux-v*` (file `che779-termux.sh`), xem trang Releases.
+            Mỗi bản có hai phiên bản riêng, tên kèm `-v1` hoặc `-v2`:
+            - **V1** (Emulator V1 + Remoter, mỗi tab một cửa sổ): `che779-v1_*_all.deb` (lệnh `che779-v1`), `che779-v1-*-linux.tar.gz`, `che779-linux-v1.sh`.
+            - **V2** (nhiều tab trong một cửa sổ): `che779-v2_*_all.deb` (lệnh `che779-v2`), `che779-v2-*-linux.tar.gz`, `che779-linux-v2.sh`.
+            - **Ubuntu / Mint / Debian:** `sudo apt install ./che779-v2_*_all.deb` (V1 và V2 cài song song được).
+            - **Mọi distro:** giải nén `.tar.gz` rồi chạy `./che779-v1` hoặc `./che779-v2`, hoặc chạy thẳng `bash che779-linux-v2.sh`.
+            - **Termux (Android):** bản riêng ở thẻ `termux-v*` (`che779-termux-v1.sh` / `-v2.sh`), xem trang Releases.
             Kiểm tra file tải về bằng `SHA256SUMS.txt` (`sha256sum -c SHA256SUMS.txt`). Chi tiết: `CHANGELOG.md`.

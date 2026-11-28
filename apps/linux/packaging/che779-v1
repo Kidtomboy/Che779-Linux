@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Che779 Remoter (V1: mỗi tab một cửa sổ, điều khiển tập trung) — chạy từ gói .deb hoặc .tar.gz.
-#   che779-remoter [game.jar ...]
+#   che779-v1 [game.jar ...]
 set -u
 HERE="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
 LIB=""
-for d in "$HERE/lib" "$HERE/../share/che779" /usr/share/che779; do [ -f "$d/Che779_Remoter.jar" ] && [ -f "$d/Che779_Emulator.jar" ] && { LIB="$d"; break; }; done
+for d in "$HERE/lib" "$HERE/../share/che779-v1" /usr/share/che779-v1; do [ -f "$d/Che779_Remoter.jar" ] && [ -f "$d/Che779_Emulator.jar" ] && { LIB="$d"; break; }; done
 [ -n "$LIB" ] || { echo "Không tìm thấy Che779_Remoter.jar / Che779_Emulator.jar (đã cài đủ gói chưa?)" >&2; exit 1; }
-if [ "${1:-}" = "-V" ] || [ "${1:-}" = "--version" ]; then echo "Che779 Remoter @VERSION@ (Linux)"; exit 0; fi
+if [ "${1:-}" = "-V" ] || [ "${1:-}" = "--version" ]; then echo "Che779 Emulator V1 + Remoter @VERSION@ (Linux)"; exit 0; fi
 command -v java >/dev/null 2>&1 || { echo "Chưa có Java. Debian/Ubuntu/Mint: sudo apt install default-jre" >&2; exit 1; }
 if [ -z "${DISPLAY:-}" ] && [ -z "${WAYLAND_DISPLAY:-}" ]; then
   command -v xvfb-run >/dev/null 2>&1 && PRE=(xvfb-run -a -s "-screen 0 1280x800x24") || { echo "Không có màn hình (DISPLAY). Chạy trong desktop hoặc cài xvfb." >&2; exit 1; }

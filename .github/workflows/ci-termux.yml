@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   kiem-tra:
-    name: Build jar V2 và kiểm thử script Termux
+    name: Build jar V1, V2 và kiểm thử script Termux
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,10 +21,11 @@ jobs:
         with: { distribution: temurin, java-version: '21' }
       - name: Lấy mã V2 đúng commit đã ghim và build jar
         run: bash apps/termux/fetch-jar.sh v2
-      - name: Kiểm thử che779-termux.sh
-        run: bash tests/test-termux.sh build/termux/Che779_EmulatorV2.jar
-      - name: Ghép thử script V2 và V1 (thử nghiệm)
+      - name: Lấy mã V1 đúng commit đã ghim và build jar
+        run: bash apps/termux/fetch-jar.sh v1
+      - name: Kiểm thử che779-termux-v1.sh và -v2.sh
+        run: bash tests/test-termux.sh
+      - name: Ghép thử hai script
         run: |
-          bash apps/termux/build-termux.sh build/termux/Che779_EmulatorV2.jar Che779_EmulatorV2.jar build/out/che779-termux.sh
-          bash apps/termux/fetch-jar.sh v1
-          bash apps/termux/build-termux.sh build/termux/Che779_Emulator.jar Che779_Emulator.jar build/out/che779-termux-v1-test.sh
+          bash apps/termux/build-termux.sh v2 build/termux/Che779_EmulatorV2.jar build/out/che779-termux-v2.sh
+          bash apps/termux/build-termux.sh v1 build/termux/Che779_Emulator.jar build/out/che779-termux-v1.sh

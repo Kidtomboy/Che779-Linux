@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # ╔══════════════════════════════════════════════════════════════╗
-# ║       Che779 Emulator — bản chạy cho Termux (Android)        ║
+# ║    Che779 Emulator (V1/V2) — bản chạy cho Termux (Android)   ║
 # ╚══════════════════════════════════════════════════════════════╝
-# Một tệp duy nhất (jar nhúng ở cuối). Dành cho Termux trên Android; Linux dùng repo Che779-Linux.
-#   bash che779-termux.sh [tùy chọn] [đoạn_tên_game]
+# Một tệp duy nhất (jar nhúng ở cuối). Termux (Android); tên che779-termux-v1.sh / -v2.sh. Linux dùng apps/linux/.
+#   bash che779-termux-v2.sh [tùy chọn] [đoạn_tên_game]
 #   -r, --ram MB     RAM tối đa cho Java (mặc định 1024)
 #   -g, --game TEXT  tự mở các game trong kho có tên chứa TEXT
 #       --net        kiểm tra kết nối mạng (DNS, HTTP, cổng game) rồi thoát
@@ -11,13 +11,14 @@
 #       --reset      cài lại từ đầu (xóa dấu hiệu "đã cài")
 #   -V, --version    in phiên bản rồi thoát
 #   -h, --help       trợ giúp
-# Kiểu cũ vẫn chạy: bash che779-termux.sh 1024 build11
+# Kiểu cũ vẫn chạy: bash che779-termux-v2.sh 1024 build11
 set -u
 set -o pipefail
 # Hai giá trị này do scripts/build-release.sh điền khi đóng gói (mã băm tính từ đúng jar được nhúng).
 CHE_VERSION="@VERSION@"
 CHE_JAR_SHA256="@JAR_SHA256@"
 CHE_JAR_NAME="@JAR_NAME@"
+CHE_VARIANT="@VARIANT@"   # v1 = Emulator V1 (mỗi game một tiến trình) · v2 = Emulator V2 (nhiều tab)
 export LC_ALL=C.UTF-8 2>/dev/null || true
 
 # ───────────── giao diện ─────────────
@@ -88,7 +89,7 @@ while [ $# -gt 0 ]; do
     -r|--ram) XMX="${2:-1024}"; shift;;
     -g|--game) FILTER="${2:-}"; shift;;
     --net) MODE_NET=1;; --doctor) MODE_DOC=1;; --reset) RESET=1;;
-    -V|--version) echo "Che779 Termux $CHE_VERSION"; exit 0;;
+    -V|--version) echo "Che779 Termux ${CHE_VARIANT^^} $CHE_VERSION"; exit 0;;
     -h|--help) sed -n '5,14p' "$0" | sed 's/^# \{0,1\}//'; exit 0;;
     ''|*[!0-9]*) [ -z "$FILTER" ] && FILTER="$1";;
     *) XMX="$1";;
@@ -111,7 +112,7 @@ extract_jar(){
   local dest="$1" tmp="$1/.@JAR_NAME@.tmp"
   mkdir -p "$dest" || return 1
   if [ -z "$(sed '1,/^__JAR__$/d' "$0" | head -c 16)" ]; then
-    err "Tệp này là bản nguồn, không chứa jar. Hãy tải che779-termux.sh ở mục Releases."; return 1
+    err "Tệp này là bản nguồn, không chứa jar. Hãy tải che779-termux-${CHE_VARIANT}.sh ở mục Releases."; return 1
   fi
   if ! sed '1,/^__JAR__$/d' "$0" | base64 -d > "$tmp"; then
     rm -f "$tmp"; err "Không giải mã được JAR nhúng (base64 lỗi)."; return 1
@@ -123,7 +124,7 @@ extract_jar(){
   # 2) mã SHA-256 phải khớp giá trị đã ghi lúc đóng gói
   local got; got="$(sha256_of "$tmp")"
   if [ -n "$got" ] && [ "$got" != "$CHE_JAR_SHA256" ]; then
-    rm -f "$tmp"; err "Mã SHA-256 của JAR không khớp (mong đợi ${CHE_JAR_SHA256:0:12}…, thực tế ${got:0:12}…). Hãy tải lại che779-termux.sh."; return 1
+    rm -f "$tmp"; err "Mã SHA-256 của JAR không khớp (mong đợi ${CHE_JAR_SHA256:0:12}…, thực tế ${got:0:12}…). Hãy tải lại che779-termux-${CHE_VARIANT}.sh."; return 1
   fi
   mv -f "$tmp" "$dest/@JAR_NAME@" || { rm -f "$tmp"; return 1; }
 }
@@ -183,7 +184,7 @@ doctor(){
   if command -v java >/dev/null; then kv "Java" "$(java -version 2>&1 | grep -v Picked | head -1)"; else kv "Java" "chưa cài"; fi
 }
 
-banner "  C H E 7 7 9   E M U L A T O R   V 2" "  J2ME · Termux · bản $CHE_VERSION"
+banner "  C H E 7 7 9   E M U L A T O R   ${CHE_VARIANT^^}" "  J2ME · Termux · bản $CHE_VERSION"
 if [ "$OS_KIND" != termux ]; then
   err "Script này chỉ dành cho Termux (Android). Linux: dùng gói .deb/.tar.gz ở repo Che779-Linux."; exit 1; fi
 doctor
@@ -193,7 +194,7 @@ doctor
 
 # ═════════════ TERMUX ═════════════
 run_termux(){
-  local SHARE="$HOME/che779_share" MARK="$HOME/.che779_setup_done"
+  local SHARE="$HOME/che779_share_${CHE_VARIANT}" MARK="$HOME/.che779_setup_done"
   [ "$RESET" = 1 ] && rm -f "$MARK"
   if [ ! -f "$MARK" ]; then
     head1 "Cài đặt lần đầu — cần mạng, ~5–10 phút"

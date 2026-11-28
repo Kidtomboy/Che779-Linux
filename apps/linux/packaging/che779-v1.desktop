@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
-Name=Che779 Remoter
+Name=Che779 Emulator V1 + Remoter
 Comment=Điều khiển nhiều Emulator V1
-Exec=che779-remoter
+Exec=che779-v1
 Terminal=false
 Categories=Game;Emulator;

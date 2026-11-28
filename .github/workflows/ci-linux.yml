@@ -23,7 +23,7 @@ jobs:
         run: bash scripts/fetch-sources.sh
       - name: Build 3 jar (V1, V2, Remoter Linux)
         run: bash scripts/build-jars.sh
-      - name: Kiểm thử che779-linux.sh
-        run: bash tests/test-script.sh build/jars/Che779_EmulatorV2.jar
-      - name: Kiểm thử gói .deb và .tar.gz
+      - name: Kiểm thử che779-linux-v1.sh và -v2.sh
+        run: bash tests/test-script.sh
+      - name: Kiểm thử gói .deb và .tar.gz (v1, v2)
         run: bash tests/test-packages.sh

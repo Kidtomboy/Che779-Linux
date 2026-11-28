@@ -1,17 +1,24 @@
 #!/usr/bin/env bash
-# Ghép che779-linux.sh hoàn chỉnh = bản nguồn + jar Che779 EmulatorV2 nhúng (base64).
-# Dùng:  scripts/build-release.sh <đường-dẫn-jar> [thư-mục-ra]
-# Mã SHA-256 của jar được TÍNH TỪ CHÍNH FILE jar này rồi điền vào script — không ai dán tay.
+# Ghép che779-linux-v1.sh / che779-linux-v2.sh = bản nguồn + dữ liệu nhúng (base64).
+#   v2: nhúng Che779_EmulatorV2.jar · v1: nhúng gói tar.gz gồm Che779_Emulator.jar + Che779_Remoter.jar.
+# Dùng:  scripts/build-release.sh <v1|v2> <thư-mục-jar> [thư-mục-ra]   (mặc định jar: build/jars)
+# Mã SHA-256 được TÍNH TỪ CHÍNH dữ liệu nhúng rồi điền vào script — không ai dán tay.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-JAR="${1:?Thiếu đường dẫn jar. Dùng: build-release.sh <jar> [thư-mục-ra]}"
-OUT="${2:-$ROOT/dist}"
-[ -f "$JAR" ] || { echo "Không thấy jar: $JAR" >&2; exit 1; }
+V="${1:?Dùng: build-release.sh <v1|v2> <thư-mục-jar> [thư-mục-ra]}"
+JARS="${2:-$ROOT/build/jars}"; OUT="${3:-$ROOT/dist}"
 VER="$(tr -d '[:space:]' < "$ROOT/VERSION")"
-SHA="$(sha256sum "$JAR" | cut -d' ' -f1)"
-mkdir -p "$OUT"
-sed -e "s/@VERSION@/$VER/" -e "s/@JAR_SHA256@/$SHA/" "$ROOT/apps/linux/che779-linux.sh" > "$OUT/che779-linux.sh"
-base64 -w 76 "$JAR" >> "$OUT/che779-linux.sh"
-chmod +x "$OUT/che779-linux.sh"
-bash -n "$OUT/che779-linux.sh"
-echo "OK: $OUT/che779-linux.sh  (phiên bản $VER, jar SHA-256 $SHA)"
+T="$(mktemp -d)"; trap 'rm -rf "$T"' EXIT
+case "$V" in
+  v2) [ -f "$JARS/Che779_EmulatorV2.jar" ] || { echo "Thiếu $JARS/Che779_EmulatorV2.jar" >&2; exit 1; }
+      PAY="$JARS/Che779_EmulatorV2.jar";;
+  v1) for j in Che779_Emulator.jar Che779_Remoter.jar; do [ -f "$JARS/$j" ] || { echo "Thiếu $JARS/$j" >&2; exit 1; }; done
+      PAY="$T/v1.tar.gz"; tar -C "$JARS" --owner=0 --group=0 -czf "$PAY" Che779_Emulator.jar Che779_Remoter.jar;;
+  *) echo "Chỉ nhận v1 hoặc v2" >&2; exit 2;;
+esac
+SHA="$(sha256sum "$PAY" | cut -d' ' -f1)"
+mkdir -p "$OUT"; F="$OUT/che779-linux-$V.sh"
+sed -e "s/@VERSION@/$VER/" -e "s/@JAR_SHA256@/$SHA/" -e "s/@VARIANT@/$V/" "$ROOT/apps/linux/che779-linux.sh" > "$F"
+base64 -w 76 "$PAY" >> "$F"
+chmod +x "$F"; bash -n "$F"
+echo "OK: $F  (phiên bản $VER, SHA-256 dữ liệu nhúng $SHA)"

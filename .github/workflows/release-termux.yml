@@ -1,6 +1,6 @@
 name: Phát hành Termux
 
-# Gắn thẻ dạng termux-v1.3.1 (hoặc bấm chạy tay) để build và đưa che779-termux.sh vào trang Releases.
+# Gắn thẻ dạng termux-v1.3.1 (hoặc bấm chạy tay) để build và đưa che779-termux-v1.sh / -v2.sh vào trang Releases.
 # Thẻ phải khớp apps/termux/VERSION. Linux có workflow riêng (thẻ v*).
 on:
   push:
@@ -24,25 +24,20 @@ jobs:
           [ "${GITHUB_REF_NAME}" = "termux-v${VER}" ] || { echo "Thẻ ${GITHUB_REF_NAME} không khớp apps/termux/VERSION (${VER})" >&2; exit 1; }
       - name: Lấy mã V2 đúng commit đã ghim và build jar
         run: bash apps/termux/fetch-jar.sh v2
+      - name: Lấy mã V1 đúng commit đã ghim và build jar
+        run: bash apps/termux/fetch-jar.sh v1
       - name: Kiểm thử
-        run: bash tests/test-termux.sh build/termux/Che779_EmulatorV2.jar
-      - name: Ghép che779-termux.sh và bản V1 thử nghiệm
+        run: bash tests/test-termux.sh
+      - name: Ghép che779-termux-v1.sh và che779-termux-v2.sh
         run: |
           set -euo pipefail
-          bash apps/termux/build-termux.sh build/termux/Che779_EmulatorV2.jar Che779_EmulatorV2.jar out/che779-termux.sh
-          bash apps/termux/fetch-jar.sh v1
-          mkdir -p test-out
-          bash apps/termux/build-termux.sh build/termux/Che779_Emulator.jar Che779_Emulator.jar test-out/che779-termux-v1-test.sh
+          bash apps/termux/build-termux.sh v2 build/termux/Che779_EmulatorV2.jar out/che779-termux-v2.sh
+          bash apps/termux/build-termux.sh v1 build/termux/Che779_Emulator.jar out/che779-termux-v1.sh
       - name: Tạo SHA256SUMS (làm SAU CÙNG, trên đúng file sẽ phát hành)
         run: |
           cd out
-          sha256sum che779-termux.sh > SHA256SUMS.txt
+          sha256sum che779-termux-v1.sh che779-termux-v2.sh > SHA256SUMS.txt
           cat SHA256SUMS.txt
-      - uses: actions/upload-artifact@v4
-        with:
-          name: termux-v1-test
-          path: test-out/*
-          if-no-files-found: error
       - uses: actions/upload-artifact@v4
         with:
           name: phat-hanh-termux
@@ -56,6 +51,7 @@ jobs:
           make_latest: false
           body: |
             ## Che779 Termux ${{ github.ref_name }}
-            - Tải `che779-termux.sh`, chạy trong Termux: `bash che779-termux.sh` (cần Termux:X11). Chạy Emulator V2.
-            - Máy tính Linux dùng bản khác: `che779-linux.sh` / `.deb` / `.tar.gz` ở thẻ `v*`.
+            - **V2** (nhiều tab): tải `che779-termux-v2.sh`, chạy trong Termux: `bash che779-termux-v2.sh` (cần Termux:X11).
+            - **V1** (mỗi game một cửa sổ): tải `che779-termux-v1.sh`, chạy `bash che779-termux-v1.sh`.
+            - Máy tính Linux dùng bản khác: `che779-linux-v1.sh` / `-v2.sh`, `.deb`, `.tar.gz` ở thẻ `v*`.
             Kiểm tra file tải về bằng `SHA256SUMS.txt` (`sha256sum -c SHA256SUMS.txt`). Chi tiết: `apps/termux/README.md`.

@@ -61,3 +61,8 @@ Do Cherry quyết, Claude ghi lại. Áp dụng cho cả 4 repo; Claude và Darl
 
 ## 2026-11-28 — Nâng P3 lên 1.3.1
 - **Quyết định (Cherry):** P3 lên 1.3.1 (Linux và Termux cùng số, `VERSION` và `apps/termux/VERSION` riêng). Ghim lại P1 `833ad6e` và P2 `ef98850` (bản 1.3.1). P1 và P2 sẽ có bản nâng cấp riêng sau, P3 theo sau khi đó.
+
+## 2026-11-28 — Tách V1 và V2 cho Linux và Termux
+- **Quyết định (Cherry):** Linux và Termux đều chạy riêng được Che779-Emulator (V1) và Che779-EmulatorV2 (V2). Mọi file `.sh`, `.tar.gz`, `.deb` có `-v1` hoặc `-v2` trong tên "để tránh thiếu sót về sau".
+- **Cách làm:** (1) tên: `che779-linux-v1.sh`/`-v2.sh`, `che779-termux-v1.sh`/`-v2.sh`, `che779-v1-<ver>-linux.tar.gz`/`che779-v2-...`, `che779-v1_<ver>_all.deb`/`che779-v2_...`; (2) hai gói `.deb` độc lập (cài song song được, thư mục `/usr/share/che779-v1`, `-v2`), lệnh `che779-v1` và `che779-v2`; lệnh cũ `che779`/`che779-remoter` bỏ; (3) V1 trên Linux = Emulator V1 + Remoter Linux (script v1 nhúng tar.gz hai jar); (4) V1 trên Termux = chỉ Emulator V1 (mỗi game một tiến trình), không có Remoter; (5) cả hai nằm ở Releases (V1 Termux không còn là artifact thử nghiệm); (6) `VERSION` giữ 1.3.1 (không nâng).
+- **Hệ quả:** tên file ở Release thay đổi, nên Cherry cần tạo lại thẻ `v1.3.1` và `termux-v1.3.1` ở commit mới nhất của main.
